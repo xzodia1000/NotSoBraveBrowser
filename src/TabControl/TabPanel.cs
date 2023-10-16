@@ -48,23 +48,52 @@ namespace NotSoBraveBrowser.src.TabControl
 
         public void AddTab(string title)
         {
-            _ = new Tab(title, this);
+            SetActiveTab(new Tab(title, this));
             Controls.SetChildIndex(addTabButton, -1);
         }
 
         public void CloseTab(Tab tab)
         {
+            int index = Controls.IndexOf(tab);
+
+            if (Controls[index + 1] is Tab)
+            {
+                SetActiveTab((Tab)Controls[index + 1]);
+            }
+            else
+            {
+                try
+                {
+                    SetActiveTab((Tab)Controls[index - 1]);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    SetActiveTab(null);
+                }
+            }
+
             Controls.Remove(tab);
         }
 
-        public void SetActiveTab(Tab tab)
+        public void SetActiveTab(Tab? tab)
         {
-            if (selectedTab != null) selectedTab.BackColor = Color.White;
-            tab.BackColor = Color.LightGray;
+            if (selectedTab is not null) selectedTab.BackColor = Color.White;
+            if (tab is not null) tab.BackColor = Color.LightGray;
+
             selectedTab = tab;
 
             if (canvas.Controls.Count == 2) canvas.Controls.Remove(canvas.Controls[1]);
-            canvas.Controls.Add(tab.content);
+            if (tab is not null) canvas.Controls.Add(tab.content);
+
+            if (tab != null)
+            {
+                canvas.Controls.Add(tab.content);
+            }
+            else
+            {
+                canvas.Controls.Add(new Label() { Text = "No tabs open", AutoSize = true, Margin = new Padding(10) });
+            }
+
             UpdatePanelWidth();
         }
 

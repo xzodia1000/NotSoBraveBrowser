@@ -27,7 +27,7 @@
         private void InitTextBox()
         {
             renderedContent.Multiline = true;
-            renderedContent.ScrollBars = RichTextBoxScrollBars.Vertical;
+            renderedContent.ScrollBars = RichTextBoxScrollBars.Both;
             renderedContent.ReadOnly = true;
             renderedContent.Margin = new Padding(5);
         }

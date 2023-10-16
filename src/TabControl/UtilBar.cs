@@ -15,17 +15,17 @@
 
             prevButton = new Button();
             nextButton = new Button();
+            refreshButton = new Button();
             urlTextBox = new TextBox();
             goButton = new Button();
-            refreshButton = new Button();
             settingButton = new Button();
 
             InitUtilBar();
             InitPrevButton();
             InitNextButton();
+            InitRefreshButton();
             InitUrlTextBox();
             InitGoButton();
-            InitRefreshButton();
             InitSettingButton();
         }
 
@@ -56,6 +56,16 @@
             Controls.Add(nextButton);
         }
 
+        private void InitRefreshButton()
+        {
+            refreshButton.Name = "refreshButton";
+            refreshButton.Text = "R";
+            refreshButton.Size = new Size(28, 28);
+            refreshButton.Margin = new Padding(1);
+            refreshButton.TextAlign = ContentAlignment.MiddleCenter;
+            Controls.Add(refreshButton);
+        }
+
         private void InitUrlTextBox()
         {
             urlTextBox.Name = "urlTextBox";
@@ -77,15 +87,6 @@
             Controls.Add(goButton);
         }
 
-        private void InitRefreshButton()
-        {
-            refreshButton.Name = "refreshButton";
-            refreshButton.Text = "R";
-            refreshButton.Size = new Size(28, 28);
-            refreshButton.Margin = new Padding(1);
-            refreshButton.TextAlign = ContentAlignment.MiddleCenter;
-            Controls.Add(refreshButton);
-        }
 
         private void InitSettingButton()
         {

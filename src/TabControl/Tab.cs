@@ -68,7 +68,7 @@ namespace NotSoBraveBrowser.src.TabControl
             }
             catch (HttpRequestException e)
             {
-                content.renderedContent.Text = e.StatusCode.ToString();
+                content.renderedContent.Text = $"{(int?)e.StatusCode} {e.StatusCode}";
             }
         }
 

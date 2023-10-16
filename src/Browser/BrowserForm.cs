@@ -24,9 +24,7 @@ namespace Browser
             Controls.Add(canvas);
            
 
-            tabPanel.AddTab("1");
-            tabPanel.AddTab("2".ToUpper());
-            tabPanel.AddTab("3");
+            tabPanel.AddTab("Home");
             tabPanel.UpdatePanelWidth();
         }
 
