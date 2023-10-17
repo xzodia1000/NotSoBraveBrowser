@@ -1,27 +1,31 @@
 ﻿using System.Text.RegularExpressions;
+using Accessibility;
+using NotSoBraveBrowser.src.History;
 using NotSoBraveBrowser.src.HttpRequests;
-using Browser;
 
 namespace NotSoBraveBrowser.src.TabControl
 
 {
-    public partial class Tab : Button
+    public class Tab : Button
     {
         private string tabTitle;
+        private readonly TabPanel panel;
         private string browserTitle;
         private readonly Requests client;
         public TabContent content;
         private readonly Button closeButton;
-        private readonly TabPanel panel;
+        private TabHistory tabHistory;
 
         public Tab(string tabTitle, TabPanel panel)
         {
             this.tabTitle = tabTitle;
             this.panel = panel;
-            browserTitle = "NotSoBraveBrowser - " + tabTitle;
+            browserTitle = tabTitle;
+
             client = new Requests();
             content = new TabContent(this);
             closeButton = new Button();
+            tabHistory = new TabHistory();
 
             InitTab();
             InitCloseButton();
@@ -40,11 +44,6 @@ namespace NotSoBraveBrowser.src.TabControl
 
         }
 
-        private void Tab_Click(object? sender, EventArgs e)
-        {
-            panel.SetActiveTab(this);
-        }
-
         private void InitCloseButton()
         {
             closeButton.Name = "closeButton";
@@ -57,12 +56,17 @@ namespace NotSoBraveBrowser.src.TabControl
             Controls.Add(closeButton);
         }
 
+        private void Tab_Click(object? sender, EventArgs e)
+        {
+            panel.SetActiveTab(this);
+        }
+
         private void CloseButton_Click(object sender, EventArgs e)
         {
             panel.CloseTab(this);
         }
 
-        public async void RenderCode(string Url)
+        public async void RenderCode(string Url, bool isHistory = false)
         {
             content.renderedContent.Text = "Loading...";
             try
@@ -71,31 +75,56 @@ namespace NotSoBraveBrowser.src.TabControl
                 content.renderedContent.Text = html;
 
                 tabTitle = GetTitle(html) != "Error" ? GetTitle(html) : "200 OK";
-                browserTitle = "NotSoBraveBrowser - " + GetTitle(html) != "Error" ? "200 OK | " + GetTitle(html) : "200 OK";
+                browserTitle = GetTitle(html) != "Error" ? "200 OK | " + GetTitle(html) : "200 OK";
             }
             catch (HttpRequestException e)
             {
                 content.renderedContent.Text = e.StatusCode.ToString() != "" ? $"{(int?)e.StatusCode} {e.StatusCode}" : "The connection has timed out.";
 
                 tabTitle = (e.StatusCode.ToString() != "" ? e.StatusCode.ToString() : "Timeout") ?? tabTitle;
-                browserTitle = "NotSoBraveBrowser - " + tabTitle;
+                browserTitle = content.renderedContent.Text;
             }
 
+            if (!isHistory && tabHistory.GetCurrentUrl() != Url) tabHistory.Visit(Url);
             UpdateTabTitle();
             UpdateBrowserTitle();
         }
 
-        private void UpdateTabTitle()
+        public string GoBack()
         {
-            Name = tabTitle;
-            Text = GetDisplayText();
+            string? url = tabHistory.PrevUrl();
+
+            if (url is not null)
+            {
+                RenderCode(url, true);
+            }
+
+            return tabHistory.GetCurrentUrl() ?? "";
         }
 
-        public void UpdateBrowserTitle()
+        public string GoForward()
         {
-            panel.Parent!.Parent!.Text = browserTitle;
+            string? url = tabHistory.NextUrl();
+
+            if (url is not null)
+            {
+                RenderCode(url, true);
+            }
+
+            return tabHistory.GetCurrentUrl() ?? "";
         }
 
+        public string Reload()
+        {
+            string? url = tabHistory.GetCurrentUrl();
+
+            if (url is not null)
+            {
+                RenderCode(url, true);
+            }
+
+            return tabHistory.GetCurrentUrl() ?? "";
+        }
 
         private static string GetTitle(string html)
         {
@@ -123,6 +152,17 @@ namespace NotSoBraveBrowser.src.TabControl
             }
 
             return tabTitle;
+        }
+
+        private void UpdateTabTitle()
+        {
+            Name = tabTitle;
+            Text = GetDisplayText();
+        }
+
+        public void UpdateBrowserTitle()
+        {
+            panel.Parent!.Parent!.Text = "NotSoBraveBrowser - " + browserTitle;
         }
     }
 }

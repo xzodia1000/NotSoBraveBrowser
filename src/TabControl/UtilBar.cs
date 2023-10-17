@@ -43,6 +43,7 @@
             prevButton.Size = new Size(28, 28);
             prevButton.Margin = new Padding(1);
             prevButton.TextAlign = ContentAlignment.MiddleCenter;
+            prevButton.Click += PrevButton_Click;
             Controls.Add(prevButton);
         }
 
@@ -53,6 +54,7 @@
             nextButton.Size = new Size(28, 28);
             nextButton.Margin = new Padding(1);
             nextButton.TextAlign = ContentAlignment.MiddleCenter;
+            nextButton.Click += NextButton_Click;
             Controls.Add(nextButton);
         }
 
@@ -63,6 +65,7 @@
             refreshButton.Size = new Size(28, 28);
             refreshButton.Margin = new Padding(1);
             refreshButton.TextAlign = ContentAlignment.MiddleCenter;
+            refreshButton.Click += RefreshButton_Click;
             Controls.Add(refreshButton);
         }
 
@@ -96,6 +99,24 @@
             settingButton.Margin = new Padding(1);
             settingButton.TextAlign = ContentAlignment.MiddleCenter;
             Controls.Add(settingButton);
+        }
+
+        private void PrevButton_Click(object sender, EventArgs e)
+        {
+            string url = tab.GoBack();
+            urlTextBox.Text = url;
+        }
+
+        private void NextButton_Click(object sender, EventArgs e)
+        {
+            string url = tab.GoForward();
+            urlTextBox.Text = url;
+        }
+
+        private void RefreshButton_Click(object sender, EventArgs e)
+        {
+            string url = tab.Reload();
+            urlTextBox.Text = url;
         }
 
         private void GoButton_Click(object sender, EventArgs e)

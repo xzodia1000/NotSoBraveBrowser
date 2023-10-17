@@ -4,15 +4,31 @@ namespace NotSoBraveBrowser.src.TabControl
 {
     public partial class TabPanel : FlowLayoutPanel
     {
+        private readonly FlowLayoutPanel canvas;
         private Button addTabButton;
         private Tab? selectedTab;
-        public readonly FlowLayoutPanel canvas;
+
+
+        [LibraryImport("user32.dll")]
+        private static partial int ShowScrollBar(IntPtr hWnd, int wBar, int bShow);
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            if (AutoScroll)
+            {
+                _ = ShowScrollBar(Handle, 0, 0); // Hide horizontal
+                _ = ShowScrollBar(Handle, 1, 0); // Hide vertical
+            }
+        }
 
         public TabPanel(FlowLayoutPanel canvas)
         {
+            this.canvas = canvas;
+
             addTabButton = new Button();
             selectedTab = null;
-            this.canvas = canvas;
 
             InitTabPanel();
             InitAddTabButton();
@@ -105,18 +121,5 @@ namespace NotSoBraveBrowser.src.TabControl
             if (selectedTab != null) selectedTab!.content.UpdateSize(canvas);
         }
 
-        [LibraryImport("user32.dll")]
-        private static partial int ShowScrollBar(IntPtr hWnd, int wBar, int bShow);
-
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-
-            if (AutoScroll)
-            {
-                _ = ShowScrollBar(Handle, 0, 0); // Hide horizontal
-                _ = ShowScrollBar(Handle, 1, 0); // Hide vertical
-            }
-        }
     }
 }
