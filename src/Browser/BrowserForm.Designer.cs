@@ -35,8 +35,8 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Name = "BrowserForm";
-            Text = "Browser";
+            Name = "NotSoBraveBrowser";
+            Text = "NotSoBraveBrowser";
             Load += Browser_Load;
             Resize += Browser_Resize;
             ResumeLayout(false);

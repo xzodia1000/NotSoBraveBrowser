@@ -1,20 +1,24 @@
-﻿using NotSoBraveBrowser.src.HttpRequests;
+﻿using System.Text.RegularExpressions;
+using NotSoBraveBrowser.src.HttpRequests;
+using Browser;
 
 namespace NotSoBraveBrowser.src.TabControl
 
 {
-    public class Tab : Button
+    public partial class Tab : Button
     {
-        private string title { set; get; }
-        private Requests client;
+        private string tabTitle;
+        private string browserTitle;
+        private readonly Requests client;
         public TabContent content;
-        private Button closeButton;
+        private readonly Button closeButton;
         private readonly TabPanel panel;
 
-        public Tab(string title, TabPanel panel)
+        public Tab(string tabTitle, TabPanel panel)
         {
-            this.title = title;
+            this.tabTitle = tabTitle;
             this.panel = panel;
+            browserTitle = "NotSoBraveBrowser - " + tabTitle;
             client = new Requests();
             content = new TabContent(this);
             closeButton = new Button();
@@ -26,7 +30,7 @@ namespace NotSoBraveBrowser.src.TabControl
         private void InitTab()
         {
             SuspendLayout();
-            Name = title;
+            Name = tabTitle;
             Text = GetDisplayText();
             Size = new Size(100, 28);
             Margin = new Padding(1);
@@ -65,26 +69,60 @@ namespace NotSoBraveBrowser.src.TabControl
             {
                 string html = await Task.Run(() => client.Get(Url));
                 content.renderedContent.Text = html;
+
+                tabTitle = GetTitle(html) != "Error" ? GetTitle(html) : "200 OK";
+                browserTitle = "NotSoBraveBrowser - " + GetTitle(html) != "Error" ? "200 OK | " + GetTitle(html) : "200 OK";
             }
             catch (HttpRequestException e)
             {
-                content.renderedContent.Text = $"{(int?)e.StatusCode} {e.StatusCode}";
+                content.renderedContent.Text = e.StatusCode.ToString() != "" ? $"{(int?)e.StatusCode} {e.StatusCode}" : "The connection has timed out.";
+
+                tabTitle = (e.StatusCode.ToString() != "" ? e.StatusCode.ToString() : "Timeout") ?? tabTitle;
+                browserTitle = "NotSoBraveBrowser - " + tabTitle;
             }
+
+            UpdateTabTitle();
+            UpdateBrowserTitle();
+        }
+
+        private void UpdateTabTitle()
+        {
+            Name = tabTitle;
+            Text = GetDisplayText();
+        }
+
+        public void UpdateBrowserTitle()
+        {
+            panel.Parent!.Parent!.Text = browserTitle;
+        }
+
+
+        private static string GetTitle(string html)
+        {
+            var titleRegex = new Regex("<title>(.+?)</title>", RegexOptions.IgnoreCase);
+            var match = titleRegex.Match(html);
+
+            if (match.Success)
+            {
+                return match.Groups[1].Value.Trim();
+            }
+
+            return "Error";
         }
 
         private string GetDisplayText()
         {
             using (Graphics g = CreateGraphics())
             {
-                SizeF size = g.MeasureString(title, Font);
+                SizeF size = g.MeasureString(tabTitle, Font);
 
-                if (size.Width > Width - 27 && title.Length != 7)
+                if (size.Width > Width - 27 && tabTitle.Length != 7)
                 {
-                    return string.Concat(title.AsSpan(0, 7), "...");
+                    return string.Concat(tabTitle.AsSpan(0, 7), "...");
                 }
             }
 
-            return title;
+            return tabTitle;
         }
     }
 }

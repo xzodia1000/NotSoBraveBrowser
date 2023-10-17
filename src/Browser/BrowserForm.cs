@@ -22,7 +22,6 @@ namespace Browser
             canvas.WrapContents = false;
             canvas.AutoScroll = false;
             Controls.Add(canvas);
-           
 
             tabPanel.AddTab("Home");
             tabPanel.UpdatePanelWidth();

@@ -94,6 +94,8 @@ namespace NotSoBraveBrowser.src.TabControl
                 canvas.Controls.Add(new Label() { Text = "No tabs open", AutoSize = true, Margin = new Padding(10) });
             }
 
+            selectedTab?.UpdateBrowserTitle();
+
             UpdatePanelWidth();
         }
 
