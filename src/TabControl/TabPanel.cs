@@ -1,10 +1,12 @@
 ﻿using System.Runtime.InteropServices;
+using NotSoBraveBrowser.models;
 
 namespace NotSoBraveBrowser.src.TabControl
 {
     public partial class TabPanel : FlowLayoutPanel
     {
         private readonly FlowLayoutPanel canvas;
+        public readonly SettingForm settingForm;
         private Button addTabButton;
         private Tab? selectedTab;
 
@@ -23,9 +25,10 @@ namespace NotSoBraveBrowser.src.TabControl
             }
         }
 
-        public TabPanel(FlowLayoutPanel canvas)
+        public TabPanel(FlowLayoutPanel canvas, SettingForm settingForm)
         {
             this.canvas = canvas;
+            this.settingForm = settingForm;
 
             addTabButton = new Button();
             selectedTab = null;
@@ -62,10 +65,12 @@ namespace NotSoBraveBrowser.src.TabControl
             AddTab("New Tab");
         }
 
-        public void AddTab(string title)
+        public Tab AddTab(string title)
         {
-            SetActiveTab(new Tab(title, this));
+            Tab newTab = new(title, this, settingForm);
+            SetActiveTab(newTab);
             Controls.SetChildIndex(addTabButton, -1);
+            return newTab;
         }
 
         public void CloseTab(Tab tab)

@@ -1,4 +1,4 @@
-﻿namespace Browser
+﻿namespace NotSoBraveBrowser.src.Browser
 {
     partial class BrowserForm : Form
     {

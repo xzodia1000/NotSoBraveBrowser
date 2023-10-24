@@ -1,4 +1,4 @@
-using Browser;
+using NotSoBraveBrowser.src.Browser;
 
 namespace NotSoBraveBrowser
 {

@@ -1,13 +1,15 @@
-﻿namespace NotSoBraveBrowser.src.TabControl
+﻿using NotSoBraveBrowser.models;
+
+namespace NotSoBraveBrowser.src.TabControl
 {
     public class TabContent : FlowLayoutPanel
     {
         public UtilBar utilBar;
         public RichTextBox renderedContent;
 
-        public TabContent(Tab tab)
+        public TabContent(Tab tab, SettingForm settingForm)
         {
-            utilBar = new UtilBar(tab);
+            utilBar = new UtilBar(tab, settingForm);
             renderedContent = new RichTextBox();
             InitTabContent();
             InitTextBox();

@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using Accessibility;
+using NotSoBraveBrowser.models;
 using NotSoBraveBrowser.src.History;
 using NotSoBraveBrowser.src.HttpRequests;
 
@@ -10,20 +10,22 @@ namespace NotSoBraveBrowser.src.TabControl
     {
         private string tabTitle;
         private readonly TabPanel panel;
+        private readonly SettingForm settingForm;
         private string browserTitle;
         private readonly Requests client;
         public TabContent content;
         private readonly Button closeButton;
-        private TabHistory tabHistory;
+        private readonly TabHistory tabHistory;
 
-        public Tab(string tabTitle, TabPanel panel)
+        public Tab(string tabTitle, TabPanel panel, SettingForm settingForm)
         {
             this.tabTitle = tabTitle;
             this.panel = panel;
+            this.settingForm = settingForm;
             browserTitle = tabTitle;
 
             client = new Requests();
-            content = new TabContent(this);
+            content = new TabContent(this, settingForm);
             closeButton = new Button();
             tabHistory = new TabHistory();
 
@@ -85,7 +87,11 @@ namespace NotSoBraveBrowser.src.TabControl
                 browserTitle = content.renderedContent.Text;
             }
 
-            if (!isHistory && tabHistory.GetCurrentUrl() != Url) tabHistory.Visit(Url);
+            if (!isHistory && tabHistory.GetCurrentUrl() != Url)
+            {
+                tabHistory.Visit(Url);
+                settingForm.HistoryUI.globalHistory.AddEntry(Url);
+            }
             UpdateTabTitle();
             UpdateBrowserTitle();
         }
@@ -128,8 +134,8 @@ namespace NotSoBraveBrowser.src.TabControl
 
         private static string GetTitle(string html)
         {
-            var titleRegex = new Regex("<title>(.+?)</title>", RegexOptions.IgnoreCase);
-            var match = titleRegex.Match(html);
+            Regex titleRegex = new("<title>(.+?)</title>", RegexOptions.IgnoreCase);
+            Match match = titleRegex.Match(html);
 
             if (match.Success)
             {

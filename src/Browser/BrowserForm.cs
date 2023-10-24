@@ -1,17 +1,22 @@
+using NotSoBraveBrowser.models;
+using NotSoBraveBrowser.src.History;
 using NotSoBraveBrowser.src.TabControl;
 
-namespace Browser
+namespace NotSoBraveBrowser.src.Browser
 {
     public partial class BrowserForm : Form
     {
-        private FlowLayoutPanel canvas;
-        private TabPanel tabPanel;
+        public FlowLayoutPanel canvas;
+        private readonly TabPanel tabPanel;
+
+        private SettingForm settingForm;
 
         public BrowserForm()
         {
             InitializeComponent();
             canvas = new FlowLayoutPanel();
-            tabPanel = new TabPanel(canvas);
+            settingForm = new SettingForm(new HistoryUI(this));
+            tabPanel = new TabPanel(canvas, settingForm);
         }
 
         private void Browser_Load(object sender, EventArgs e)
@@ -25,6 +30,12 @@ namespace Browser
 
             tabPanel.AddTab("Home");
             tabPanel.UpdatePanelWidth();
+        }
+
+        public void NewTab(string tabTitle, string url)
+        {
+            Tab newTab = tabPanel.AddTab(tabTitle);
+            newTab.RenderCode(url);
         }
 
         private void Browser_Resize(object sender, EventArgs e)

@@ -1,17 +1,23 @@
-﻿namespace NotSoBraveBrowser.src.TabControl
+﻿using NotSoBraveBrowser.models;
+
+namespace NotSoBraveBrowser.src.TabControl
 {
     public class UtilBar : FlowLayoutPanel
     {
-        private Tab tab;
-        private Button prevButton;
-        private Button nextButton;
-        private TextBox urlTextBox;
-        private Button goButton;
-        private Button refreshButton;
-        private Button settingButton;
-        public UtilBar(Tab tab)
+        private readonly Tab tab;
+        private readonly SettingForm settingForm;
+        private readonly Button prevButton;
+        private readonly Button nextButton;
+        private readonly TextBox urlTextBox;
+        private readonly Button goButton;
+        private readonly Button refreshButton;
+        private readonly Button settingButton;
+        private ContextMenuStrip settingsMenu;
+
+        public UtilBar(Tab tab, SettingForm settingForm)
         {
             this.tab = tab;
+            this.settingForm = settingForm;
 
             prevButton = new Button();
             nextButton = new Button();
@@ -19,6 +25,7 @@
             urlTextBox = new TextBox();
             goButton = new Button();
             settingButton = new Button();
+            settingsMenu = new ContextMenuStrip();
 
             InitUtilBar();
             InitPrevButton();
@@ -27,6 +34,7 @@
             InitUrlTextBox();
             InitGoButton();
             InitSettingButton();
+            InitSettingsMenu();
         }
 
         public void InitUtilBar()
@@ -94,11 +102,24 @@
         private void InitSettingButton()
         {
             settingButton.Name = "settingButton";
-            settingButton.Text = "S";
+            settingButton.Image = ResizeImage(IconImage.menuIcon, 22, 22);
             settingButton.Size = new Size(28, 28);
             settingButton.Margin = new Padding(1);
-            settingButton.TextAlign = ContentAlignment.MiddleCenter;
+            settingButton.Click += SettingsButton_Click;
             Controls.Add(settingButton);
+        }
+
+        private void InitSettingsMenu()
+        {
+            settingsMenu.Name = "settingsMenu";
+
+            ToolStripMenuItem historyItem = new("History");
+            historyItem.Click += (sender, e) => settingForm.HistoryUI.Open();
+            settingsMenu.Items.Add(historyItem);
+
+            settingsMenu.Items.Add("Bookmarks");
+            settingsMenu.Items.Add("Download Manager");
+            settingsMenu.Items.Add("Change Homepage");
         }
 
         private void PrevButton_Click(object sender, EventArgs e)
@@ -124,10 +145,21 @@
             tab.RenderCode(urlTextBox.Text);
         }
 
+        private void SettingsButton_Click(object sender, EventArgs e)
+        {
+            settingsMenu.Show(settingButton, new Point(-settingsMenu.Width + settingButton.Width, settingButton.Height));
+        }
+
         public void UpdateSize(FlowLayoutPanel canvas)
         {
             Width = canvas.Width;
             urlTextBox.Width = Width - 28 * 6;
+        }
+
+        private static Image ResizeImage(Image image, int width, int height)
+        {
+            Bitmap bitmap = new(image, new Size(width, height));
+            return bitmap;
         }
     }
 }

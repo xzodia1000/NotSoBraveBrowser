@@ -10,4 +10,23 @@
 	<DisableWinExeOutputInference>true</DisableWinExeOutputInference>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Update="IconImage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IconImage.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="IconImage.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IconImage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Svg" Version="3.4.4" />
+  </ItemGroup>
+
 </Project>
