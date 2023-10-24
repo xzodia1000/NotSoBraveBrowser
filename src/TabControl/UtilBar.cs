@@ -8,7 +8,7 @@ namespace NotSoBraveBrowser.src.TabControl
         private readonly SettingForm settingForm;
         private readonly Button prevButton;
         private readonly Button nextButton;
-        private readonly TextBox urlTextBox;
+        public readonly TextBox urlTextBox;
         private readonly Button goButton;
         private readonly Button refreshButton;
         private readonly Button settingButton;

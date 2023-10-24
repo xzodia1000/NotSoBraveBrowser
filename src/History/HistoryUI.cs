@@ -71,7 +71,7 @@ namespace NotSoBraveBrowser.src.History
 
         private void HistoryTable_MouseMove(object sender, MouseEventArgs e)
         {
-            ListViewItem item = historyTable.GetItemAt(e.X, e.Y);
+            ListViewItem? item = historyTable.GetItemAt(e.X, e.Y);
 
             if (item != null)
             {

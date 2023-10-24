@@ -70,6 +70,17 @@ namespace NotSoBraveBrowser.src.TabControl
 
         public async void RenderCode(string Url, bool isHistory = false)
         {
+            if (Url.Equals("") || Url.Equals("http://") || Url.Equals("https://"))
+            {
+                return;
+            }
+
+            if (!(Url.StartsWith("http://") || Url.StartsWith("https://")))
+            {
+                Url = "http://" + Url;
+            }
+
+            content.utilBar.urlTextBox.Text = Url;
             content.renderedContent.Text = "Loading...";
             try
             {
@@ -85,6 +96,12 @@ namespace NotSoBraveBrowser.src.TabControl
 
                 tabTitle = (e.StatusCode.ToString() != "" ? e.StatusCode.ToString() : "Timeout") ?? tabTitle;
                 browserTitle = content.renderedContent.Text;
+            }
+            catch (UriFormatException)
+            {
+                content.renderedContent.Text = "Invalid URL";
+                tabTitle = "Invalid URL";
+                browserTitle = "Invalid URL";
             }
 
             if (!isHistory && tabHistory.GetCurrentUrl() != Url)

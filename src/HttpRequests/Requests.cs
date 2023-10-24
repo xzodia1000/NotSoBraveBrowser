@@ -11,6 +11,7 @@
 
         public async Task<string> Get(string url)
         {
+
             HttpResponseMessage response = await client.GetAsync(url);
 
             response.EnsureSuccessStatusCode();
