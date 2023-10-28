@@ -37,8 +37,10 @@
             ClientSize = new Size(800, 450);
             Name = "NotSoBraveBrowser";
             Text = "NotSoBraveBrowser";
+            KeyPreview = true;
             Load += Browser_Load;
             Resize += Browser_Resize;
+            KeyDown += new KeyEventHandler(Browser_KeyDown);
             ResumeLayout(false);
         }
 

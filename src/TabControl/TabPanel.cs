@@ -75,7 +75,7 @@ namespace NotSoBraveBrowser.src.TabControl
             return newTab;
         }
 
-        public void CloseTab(Tab tab)
+        public void CloseTab(Tab? tab)
         {
             int index = Controls.IndexOf(tab);
 
@@ -121,6 +121,22 @@ namespace NotSoBraveBrowser.src.TabControl
             selectedTab?.UpdateBrowserTitle();
 
             UpdatePanelWidth();
+        }
+
+        public void NextTab()
+        {
+            if (selectedTab is null) return;
+            int index = Controls.IndexOf(selectedTab);
+            if (index == Controls.Count - 2) SetActiveTab((Tab)Controls[0]);
+            else SetActiveTab((Tab)Controls[index + 1]);
+        }
+
+        public void PrevTab()
+        {
+            if (selectedTab is null) return;
+            int index = Controls.IndexOf(selectedTab);
+            if (index == 0) SetActiveTab((Tab)Controls[Controls.Count - 2]);
+            else SetActiveTab((Tab)Controls[index - 1]);
         }
 
         public void UpdatePanelWidth()

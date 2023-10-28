@@ -111,6 +111,8 @@ namespace NotSoBraveBrowser.src.TabControl
             urlTextBox.Text = "http://";
             urlTextBox.Height = 28;
             urlTextBox.Width = Width - 28 * 8;
+
+            urlTextBox.KeyDown += new KeyEventHandler(UrlTextBox_KeyDown);
             Controls.Add(urlTextBox);
         }
 
@@ -190,6 +192,16 @@ namespace NotSoBraveBrowser.src.TabControl
         {
             string url = tab.Reload();
             urlTextBox.Text = url;
+        }
+
+        private void UrlTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                tab.RenderCode(urlTextBox.Text);
+                e.Handled = true;  // This prevents the beep sound on pressing Enter
+                e.SuppressKeyPress = true;  // Also part of preventing the beep
+            }
         }
 
         private void GoButton_Click(object sender, EventArgs e)
