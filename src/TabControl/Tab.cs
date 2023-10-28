@@ -150,6 +150,7 @@ namespace NotSoBraveBrowser.src.TabControl
             UpdateBrowserTitle();
             content.utilBar.UpdateBookmarkButton();
             content.utilBar.UpdateBackForwardButtons();
+            content.utilBar.UpdateReloadButton();
         }
 
         public string GoBack()

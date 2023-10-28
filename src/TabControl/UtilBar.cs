@@ -11,7 +11,7 @@ namespace NotSoBraveBrowser.src.TabControl
         private readonly Button prevButton;
         private readonly Button nextButton;
         private readonly Button homeButton;
-        private readonly Button refreshButton;
+        private readonly Button reloadButton;
         public readonly TextBox urlTextBox;
         private readonly Button goButton;
         private readonly Button bookmarkButton;
@@ -27,7 +27,7 @@ namespace NotSoBraveBrowser.src.TabControl
             prevButton = new Button();
             nextButton = new Button();
             homeButton = new Button();
-            refreshButton = new Button();
+            reloadButton = new Button();
             urlTextBox = new TextBox();
             goButton = new Button();
             bookmarkButton = new Button();
@@ -38,7 +38,7 @@ namespace NotSoBraveBrowser.src.TabControl
             InitPrevButton();
             InitNextButton();
             InitHomeButton();
-            InitRefreshButton();
+            InitReloadButton();
             InitUrlTextBox();
             InitGoButton();
             InitBookmarkButton();
@@ -94,17 +94,18 @@ namespace NotSoBraveBrowser.src.TabControl
             Controls.Add(homeButton);
         }
 
-        private void InitRefreshButton()
+        private void InitReloadButton()
         {
-            refreshButton.Name = "refreshButton";
-            refreshButton.Image = ImageUtil.ResizeImage(IconImage.reloadIcon, 18, 18);
-            refreshButton.Size = new Size(28, 28);
-            refreshButton.Margin = new Padding(1);
-            refreshButton.ImageAlign = ContentAlignment.MiddleCenter;
+            reloadButton.Name = "reloadButton";
+            reloadButton.Image = ImageUtil.ResizeImage(IconImage.reloadIcon, 18, 18);
+            reloadButton.Size = new Size(28, 28);
+            reloadButton.Margin = new Padding(1);
+            reloadButton.ImageAlign = ContentAlignment.MiddleCenter;
+            reloadButton.Enabled = false;
 
-            refreshButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
-            refreshButton.Click += RefreshButton_Click;
-            Controls.Add(refreshButton);
+            reloadButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
+            reloadButton.Click += ReloadButton_Click;
+            Controls.Add(reloadButton);
         }
 
         private void InitUrlTextBox()
@@ -190,7 +191,7 @@ namespace NotSoBraveBrowser.src.TabControl
             urlTextBox.Text = url;
         }
 
-        private void RefreshButton_Click(object sender, EventArgs e)
+        private void ReloadButton_Click(object sender, EventArgs e)
         {
             string url = tab.Reload();
             urlTextBox.Text = url;
@@ -239,6 +240,12 @@ namespace NotSoBraveBrowser.src.TabControl
 
             if (tab.tabHistory.CanGoForward()) nextButton.Enabled = true;
             else nextButton.Enabled = false;
+        }
+
+        public void UpdateReloadButton()
+        {
+            if (UrlUtils.IsEmptyUrl(urlTextBox.Text)) reloadButton.Enabled = false;
+            else reloadButton.Enabled = true;
         }
 
         public void UpdateBookmarkButton()
