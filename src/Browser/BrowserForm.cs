@@ -1,4 +1,5 @@
 using NotSoBraveBrowser.models;
+using NotSoBraveBrowser.src.Bookmark;
 using NotSoBraveBrowser.src.Download;
 using NotSoBraveBrowser.src.History;
 using NotSoBraveBrowser.src.TabControl;
@@ -11,6 +12,7 @@ namespace NotSoBraveBrowser.src.Browser
         private readonly TabPanel tabPanel;
         private readonly HistoryUI historyUI;
         private readonly DownloadUI downloadUI;
+        private readonly BookmarkUI bookmarkUI;
         private readonly SettingForm settingForm;
 
         public BrowserForm()
@@ -19,7 +21,8 @@ namespace NotSoBraveBrowser.src.Browser
             canvas = new FlowLayoutPanel();
             historyUI = new HistoryUI(this);
             downloadUI = new DownloadUI(this);
-            settingForm = new SettingForm(historyUI, downloadUI);
+            bookmarkUI = new BookmarkUI(this);
+            settingForm = new SettingForm(historyUI, downloadUI, bookmarkUI);
             tabPanel = new TabPanel(canvas, settingForm);
         }
 

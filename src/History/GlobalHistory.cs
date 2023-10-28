@@ -50,7 +50,7 @@ namespace NotSoBraveBrowser.src.History
             }
         }
 
-        public void AddEntry(string url)
+        public void AddHistory(string url)
         {
             HistoryEntry entry = new(url, DateTime.Now);
             try
@@ -60,12 +60,23 @@ namespace NotSoBraveBrowser.src.History
                 string jsonString = JsonSerializer.Serialize(historyEntries);
                 File.WriteAllText(filePath, jsonString);
             }
+            catch (FileNotFoundException) // Specific exception for a file that doesn't exist.
+            {
+                // File does not exist, create it.
+                File.Create(filePath).Close();
+                AddHistory(url);
+            }
             catch (DirectoryNotFoundException) // Specific exception for a directory that doesn't exist.
             {
                 // Directory does not exist, create it.
                 Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
                 File.Create(filePath).Close();
-                AddEntry(url);
+                AddHistory(url);
+            }
+            catch (JsonException)
+            {
+                File.Delete(filePath);
+                AddHistory(url);
             }
         }
     }

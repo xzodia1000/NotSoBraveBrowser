@@ -8,16 +8,17 @@ namespace NotSoBraveBrowser.src.TabControl
     {
         private readonly FlowLayoutPanel canvas;
         public readonly SettingForm settingForm;
+        public Tab? selectedTab;
         private Button addTabButton;
-        private Tab? selectedTab;
+
 
         public TabPanel(FlowLayoutPanel canvas, SettingForm settingForm)
         {
             this.canvas = canvas;
             this.settingForm = settingForm;
-
-            addTabButton = new Button();
             selectedTab = null;
+            addTabButton = new Button();
+
 
             InitTabPanel();
             InitAddTabButton();

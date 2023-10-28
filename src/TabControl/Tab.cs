@@ -142,11 +142,12 @@ namespace NotSoBraveBrowser.src.TabControl
             if (!isHistory && tabHistory.GetCurrentUrl() != Url)
             {
                 tabHistory.Visit(Url);
-                settingForm.HistoryUI.globalHistory.AddEntry(Url);
+                settingForm.HistoryUI.globalHistory.AddHistory(Url);
             }
 
             UpdateTabTitle();
             UpdateBrowserTitle();
+            content.utilBar.UpdateBookmarkButton();
         }
 
         public string GoBack()

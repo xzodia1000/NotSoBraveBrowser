@@ -7,24 +7,28 @@ namespace NotSoBraveBrowser.src.TabControl
     {
         private readonly Tab tab;
         private readonly SettingForm settingForm;
+        bool? isBookmark = null;
         private readonly Button prevButton;
         private readonly Button nextButton;
+        private readonly Button refreshButton;
         public readonly TextBox urlTextBox;
         private readonly Button goButton;
-        private readonly Button refreshButton;
+        private readonly Button bookmarkButton;
         private readonly Button settingButton;
-        private ContextMenuStrip settingsMenu;
+        private readonly ContextMenuStrip settingsMenu;
 
         public UtilBar(Tab tab, SettingForm settingForm)
         {
             this.tab = tab;
             this.settingForm = settingForm;
+            isBookmark = null;
 
             prevButton = new Button();
             nextButton = new Button();
             refreshButton = new Button();
             urlTextBox = new TextBox();
             goButton = new Button();
+            bookmarkButton = new Button();
             settingButton = new Button();
             settingsMenu = new ContextMenuStrip();
 
@@ -34,6 +38,7 @@ namespace NotSoBraveBrowser.src.TabControl
             InitRefreshButton();
             InitUrlTextBox();
             InitGoButton();
+            InitBookmarkButton();
             InitSettingButton();
             InitSettingsMenu();
         }
@@ -89,7 +94,7 @@ namespace NotSoBraveBrowser.src.TabControl
             urlTextBox.Name = "urlTextBox";
             urlTextBox.Text = "http://";
             urlTextBox.Height = 28;
-            urlTextBox.Width = Width - 28 * 6;
+            urlTextBox.Width = Width - 28 * 7;
             Controls.Add(urlTextBox);
         }
 
@@ -106,6 +111,18 @@ namespace NotSoBraveBrowser.src.TabControl
             Controls.Add(goButton);
         }
 
+        private void InitBookmarkButton()
+        {
+            bookmarkButton.Name = "bookmarkButton";
+            bookmarkButton.Image = ImageUtil.ResizeImage(IconImage.bookmarkDisabledIcon, 18, 18);
+            bookmarkButton.Size = new Size(28, 28);
+            bookmarkButton.Margin = new Padding(1);
+            bookmarkButton.ImageAlign = ContentAlignment.MiddleCenter;
+            bookmarkButton.Enabled = false;
+
+            bookmarkButton.Click += BookmarkButton_Click;
+            Controls.Add(bookmarkButton);
+        }
 
         private void InitSettingButton()
         {
@@ -128,7 +145,9 @@ namespace NotSoBraveBrowser.src.TabControl
             historyItem.Click += (sender, e) => settingForm.HistoryUI.OpenHistory();
             settingsMenu.Items.Add(historyItem);
 
-            settingsMenu.Items.Add("Bookmarks");
+            ToolStripMenuItem bookmarkItem = new("Bookmarks");
+            bookmarkItem.Click += (sender, e) => settingForm.BookmarkUI.OpenBookmark();
+            settingsMenu.Items.Add(bookmarkItem);
 
             ToolStripMenuItem downloadItem = new("Download");
             downloadItem.Click += (sender, e) => settingForm.DownloadUI.OpenDownload();
@@ -160,15 +179,56 @@ namespace NotSoBraveBrowser.src.TabControl
             tab.RenderCode(urlTextBox.Text);
         }
 
+        private void BookmarkButton_Click(object sender, EventArgs e)
+        {
+            if (isBookmark == true)
+            {
+                bookmarkButton.Image = ImageUtil.ResizeImage(IconImage.bookmarkIcon, 18, 18);
+                settingForm.BookmarkUI.bookmarkManager.RemoveBookmark(urlTextBox.Text);
+                isBookmark = false;
+            }
+            else if (isBookmark == false)
+            {
+                bookmarkButton.Image = ImageUtil.ResizeImage(IconImage.bookmarkFillIcon, 18, 18);
+                settingForm.BookmarkUI.bookmarkManager.AddBookmark(urlTextBox.Text);
+                isBookmark = true;
+            }
+        }
+
         private void SettingsButton_Click(object sender, EventArgs e)
         {
             settingsMenu.Show(settingButton, new Point(-settingsMenu.Width + settingButton.Width, settingButton.Height));
         }
 
+        public void UpdateBookmarkButton()
+        {
+            if (!UrlUtils.NormalizeUrl(urlTextBox.Text).Equals(""))
+            {
+                if (settingForm.BookmarkUI.bookmarkManager.CheckBookmark(urlTextBox.Text))
+                {
+                    bookmarkButton.Image = ImageUtil.ResizeImage(IconImage.bookmarkFillIcon, 18, 18);
+                    isBookmark = true;
+                }
+                else
+                {
+                    bookmarkButton.Image = ImageUtil.ResizeImage(IconImage.bookmarkIcon, 18, 18);
+                    isBookmark = false;
+                }
+                bookmarkButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
+                bookmarkButton.Enabled = true;
+            }
+            else
+            {
+                bookmarkButton.Image = ImageUtil.ResizeImage(IconImage.bookmarkDisabledIcon, 18, 18);
+                bookmarkButton.MouseHover -= (sender, e) => Cursor = Cursors.Hand;
+                bookmarkButton.Enabled = false;
+            }
+        }
+
         public void UpdateSize(FlowLayoutPanel canvas)
         {
             Width = canvas.Width;
-            urlTextBox.Width = Width - 28 * 6;
+            urlTextBox.Width = Width - 28 * 7;
         }
 
 

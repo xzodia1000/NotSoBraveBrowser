@@ -15,7 +15,7 @@ namespace NotSoBraveBrowser.src.Download
         public async Task<List<BulkDownload>> GetBulkDownloads(string filePath)
         {
             List<BulkDownload> bulkDownloads = new();
-            string line;
+            string? line;
 
             using (StreamReader r = new(filePath))
             {

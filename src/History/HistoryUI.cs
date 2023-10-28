@@ -18,18 +18,6 @@ namespace NotSoBraveBrowser.src.History
             InitHistoryTable();
         }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                e.Cancel = true; // cancels the form close request
-                Hide();   // hides the form
-                historyTable.Items.Clear();
-            }
-
-            base.OnFormClosing(e);
-        }
-
         private void InitHistoryUI()
         {
             Text = "History";
@@ -41,6 +29,7 @@ namespace NotSoBraveBrowser.src.History
             MinimizeBox = false;
             ShowIcon = false;
             ShowInTaskbar = false;
+            FormClosing += Form_FormClosing;
         }
 
         private void InitHistoryTable()
@@ -62,11 +51,20 @@ namespace NotSoBraveBrowser.src.History
             Controls.Add(historyTable);
         }
 
+        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true; // cancels the form close request
+                Hide();   // hides the form
+                historyTable.Items.Clear();
+            }
+        }
+
         private void HistoryTable_Click(object sender, EventArgs e)
         {
             string url = historyTable.SelectedItems[0].SubItems[2].Text;
             browserForm.NewTab("New Tab", url);
-            Console.WriteLine(url);
         }
 
         private void HistoryTable_MouseMove(object sender, MouseEventArgs e)
