@@ -74,7 +74,7 @@ namespace NotSoBraveBrowser.src.Download
             downloadText.Dock = DockStyle.Fill;
             downloadText.TextAlign = ContentAlignment.MiddleCenter;
             downloadText.Font = new Font("Roboto", 12F, FontStyle.Bold);
-            downloadText.MouseHover += (sender, e) => Cursor = Cursors.Hand;
+            downloadText.MouseHover += (sender, e) => downloadText.Cursor = Cursors.Hand;
             downloadText.Click += EmptyPanel_Click;
 
             emptyPanel.Controls.Add(downloadText);
@@ -104,7 +104,7 @@ namespace NotSoBraveBrowser.src.Download
             downloadButton.Dock = DockStyle.Fill;
             downloadButton.Enabled = false;
 
-            downloadButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
+            downloadButton.MouseHover += (sender, e) => downloadButton.Cursor = Cursors.Hand;
             downloadButton.Click += DownloadButton_Click;
             downloadPanel.Controls.Add(downloadButton, 0, 1);
         }
@@ -112,11 +112,18 @@ namespace NotSoBraveBrowser.src.Download
         private void Form_FormClosing(object? sender, FormClosingEventArgs e)
         {
             browserForm.Enabled = true;
+
             downloadPanel.Controls.Remove(downloadTable);
             downloadPanel.Controls.Add(emptyPanel, 0, 0);
+
             emptyPanel.Click += EmptyPanel_Click;
-            downloadText.MouseHover += (sender, e) => Cursor = Cursors.Hand;
-            downloadText.Text = "Drag and drop or attach file to download.";
+            emptyPanel.Enabled = true;
+            downloadText.Enabled = true;
+
+            downloadText.MouseHover += (sender, e) => downloadText.Cursor = Cursors.Hand;
+            downloadButton.MouseHover += (sender, e) => downloadButton.Cursor = Cursors.Hand;
+
+            UpdatePanelText("Drag and drop or attach file to download.");
 
             if (e.CloseReason == CloseReason.UserClosing)
             {
@@ -136,10 +143,7 @@ namespace NotSoBraveBrowser.src.Download
 
                 if (Path.GetExtension(filePath).ToLower() == ".txt")
                 {
-                    MessageBox.Show($"Dropped file: {filePath}");
-                    downloadPath = filePath;
-                    downloadText.Text = Path.GetFileName(filePath);
-                    downloadButton.Enabled = true;
+                    SelectedFile(filePath);
                 }
                 else
                 {
@@ -169,10 +173,7 @@ namespace NotSoBraveBrowser.src.Download
 
                 if (Path.GetExtension(filePath).ToLower() == ".txt")
                 {
-                    MessageBox.Show($"Dropped file: {filePath}");
-                    downloadPath = filePath;
-                    downloadText.Text = Path.GetFileName(filePath);
-                    downloadButton.Enabled = true;
+                    SelectedFile(filePath);
                 }
                 else
                 {
@@ -183,17 +184,41 @@ namespace NotSoBraveBrowser.src.Download
 
         private async void DownloadButton_Click(object? sender, EventArgs e)
         {
-            downloadButton.Text = "Downloading...";
-            downloadText.Text = "Please wait...";
+            UpdateButtonText("Downloading...");
+            UpdatePanelText("Please wait...");
+
             downloadButton.Enabled = false;
             emptyPanel.Click -= EmptyPanel_Click;
-            downloadText.MouseHover -= (sender, e) => Cursor = Cursors.Default;
+            emptyPanel.Enabled = false;
+            downloadText.Enabled = false;
+
+            downloadText.MouseHover -= (sender, e) => downloadText.Cursor = Cursors.Default;
+            downloadButton.MouseHover -= (sender, e) => downloadButton.Cursor = Cursors.Default;
 
             List<BulkDownload> result = await downloadManager.GetBulkDownloads(downloadPath);
             downloadPath = "";
             downloadButton.Text = "Download";
 
             UpdateDownloadTable(result);
+        }
+
+        private void SelectedFile(string filePath)
+        {
+            MessageBox.Show($"Dropped file: {filePath}");
+            downloadPath = filePath;
+            downloadText.Text = Path.GetFileName(filePath);
+            downloadButton.Enabled = true;
+            downloadButton.MouseHover -= (sender, e) => downloadButton.Cursor = Cursors.Default;
+        }
+
+        private void UpdatePanelText(string text)
+        {
+            downloadText.Text = text;
+        }
+
+        private void UpdateButtonText(string text)
+        {
+            downloadButton.Text = text;
         }
 
         private void UpdateDownloadTable(List<BulkDownload> bulkDownloads)
