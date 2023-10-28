@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using NotSoBraveBrowser.lib;
 using NotSoBraveBrowser.models;
 using NotSoBraveBrowser.src.History;
 using NotSoBraveBrowser.src.HttpRequests;
@@ -41,19 +42,39 @@ namespace NotSoBraveBrowser.src.TabControl
             Size = new Size(100, 28);
             Margin = new Padding(1);
             TextAlign = ContentAlignment.MiddleLeft;
-            panel.Controls.Add(this);
-            Click += Tab_Click;
 
+            MouseHover += (sender, e) => Cursor = Cursors.Hand;
+            Click += Tab_Click;
+            panel.Controls.Add(this);
         }
 
         private void InitCloseButton()
         {
             closeButton.Name = "closeButton";
-            closeButton.Text = "X";
-            closeButton.Size = new Size(26, 26);
-            closeButton.Left = Width - closeButton.Width - 1;
+            closeButton.Image = ImageUtil.ResizeImage(IconImage.closeIcon, 18, 18);
+            closeButton.Size = new Size(20, 20);
+            closeButton.Left = Width - closeButton.Width - 4;
             closeButton.Top = (Height - closeButton.Height) / 2;
-            closeButton.TextAlign = ContentAlignment.MiddleCenter;
+            closeButton.ImageAlign = ContentAlignment.MiddleCenter;
+
+            closeButton.FlatStyle = FlatStyle.Flat;
+            closeButton.BackColor = Color.Transparent;
+            closeButton.FlatAppearance.BorderSize = 0;
+            closeButton.FlatAppearance.MouseOverBackColor = closeButton.BackColor;  // Color on hover
+            closeButton.FlatAppearance.MouseDownBackColor = closeButton.BackColor;
+
+            closeButton.MouseHover += (sender, e) =>
+            {
+                closeButton.BackColor = Color.Transparent;
+                closeButton.Cursor = Cursors.Hand;
+                closeButton.Image = ImageUtil.ResizeImage(IconImage.closeRedIcon, 18, 18);
+            };
+
+            closeButton.MouseLeave += (sender, e) =>
+            {
+                closeButton.Image = ImageUtil.ResizeImage(IconImage.closeIcon, 18, 18);
+            };
+
             closeButton.Click += CloseButton_Click;
             Controls.Add(closeButton);
         }
@@ -70,32 +91,34 @@ namespace NotSoBraveBrowser.src.TabControl
 
         public async void RenderCode(string Url, bool isHistory = false)
         {
-            if (Url.Equals("") || Url.Equals("http://") || Url.Equals("https://"))
+            if (string.IsNullOrEmpty(Url) || Url.Equals("http://") || Url.Equals("https://"))
             {
                 return;
             }
 
-            if (!(Url.StartsWith("http://") || Url.StartsWith("https://")))
-            {
-                Url = "http://" + Url;
-            }
+            Url = (Url.StartsWith("http://") || Url.StartsWith("https://")) ? Url : "http://" + Url;
 
             content.utilBar.urlTextBox.Text = Url;
-            content.renderedContent.Text = "Loading...";
+            content.UpdateContent("Loading...", true);
+
             try
             {
-                string html = await Task.Run(() => client.Get(Url));
-                content.renderedContent.Text = html;
+                HttpResponseMessage response = await Task.Run(() => client.Get(Url));
 
-                tabTitle = GetTitle(html) != "Error" ? GetTitle(html) : "200 OK";
-                browserTitle = GetTitle(html) != "Error" ? "200 OK | " + GetTitle(html) : "200 OK";
-            }
-            catch (HttpRequestException e)
-            {
-                content.renderedContent.Text = e.StatusCode.ToString() != "" ? $"{(int?)e.StatusCode} {e.StatusCode}" : "The connection has timed out.";
+                if (response.IsSuccessStatusCode)
+                {
+                    string html = await response.Content.ReadAsStringAsync();
+                    content.UpdateContent(html);
 
-                tabTitle = (e.StatusCode.ToString() != "" ? e.StatusCode.ToString() : "Timeout") ?? tabTitle;
-                browserTitle = content.renderedContent.Text;
+                    tabTitle = GetTitle(html) != "Error" ? GetTitle(html) : "200 OK";
+                    browserTitle = GetTitle(html) != "Error" ? "200 OK | " + GetTitle(html) : "200 OK";
+                }
+                else
+                {
+                    content.UpdateContent($"{(int)response.StatusCode} {response.ReasonPhrase}", true);
+                    tabTitle = $"{response.StatusCode}";
+                    browserTitle = content.renderedContent.Name;
+                }
             }
             catch (UriFormatException)
             {
@@ -103,12 +126,25 @@ namespace NotSoBraveBrowser.src.TabControl
                 tabTitle = "Invalid URL";
                 browserTitle = "Invalid URL";
             }
+            catch (TaskCanceledException)
+            {
+                content.UpdateContent("The connection has timed out.", true);
+                tabTitle = "Timeout";
+                browserTitle = content.renderedContent.Text;
+            }
+            catch (HttpRequestException)
+            {
+                content.UpdateContent("Something went wrong.\r\nCheck if you entered the right address\r\nCheck your network connection\r\nTry again later", true);
+                tabTitle = "Error";
+                browserTitle = content.renderedContent.Text;
+            }
 
             if (!isHistory && tabHistory.GetCurrentUrl() != Url)
             {
                 tabHistory.Visit(Url);
                 settingForm.HistoryUI.globalHistory.AddEntry(Url);
             }
+
             UpdateTabTitle();
             UpdateBrowserTitle();
         }
@@ -151,11 +187,12 @@ namespace NotSoBraveBrowser.src.TabControl
 
         private static string GetTitle(string html)
         {
-            Regex titleRegex = new("<title>(.+?)</title>", RegexOptions.IgnoreCase);
+            Regex titleRegex = new("<title*>\\s*(.*)\\s*</title>", RegexOptions.IgnoreCase);
             Match match = titleRegex.Match(html);
 
             if (match.Success)
             {
+                Console.WriteLine("test" + match.Groups[1].Value.Trim());
                 return match.Groups[1].Value.Trim();
             }
 

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using NotSoBraveBrowser.lib;
 using NotSoBraveBrowser.models;
 
 namespace NotSoBraveBrowser.src.TabControl
@@ -10,6 +11,17 @@ namespace NotSoBraveBrowser.src.TabControl
         private Button addTabButton;
         private Tab? selectedTab;
 
+        public TabPanel(FlowLayoutPanel canvas, SettingForm settingForm)
+        {
+            this.canvas = canvas;
+            this.settingForm = settingForm;
+
+            addTabButton = new Button();
+            selectedTab = null;
+
+            InitTabPanel();
+            InitAddTabButton();
+        }
 
         [LibraryImport("user32.dll")]
         private static partial int ShowScrollBar(IntPtr hWnd, int wBar, int bShow);
@@ -25,19 +37,6 @@ namespace NotSoBraveBrowser.src.TabControl
             }
         }
 
-        public TabPanel(FlowLayoutPanel canvas, SettingForm settingForm)
-        {
-            this.canvas = canvas;
-            this.settingForm = settingForm;
-
-            addTabButton = new Button();
-            selectedTab = null;
-
-            InitTabPanel();
-            InitAddTabButton();
-        }
-
-
         public void InitTabPanel()
         {
             Height = 30;
@@ -52,10 +51,12 @@ namespace NotSoBraveBrowser.src.TabControl
         private void InitAddTabButton()
         {
             addTabButton.Name = "addTabButton";
-            addTabButton.Text = "+";
+            addTabButton.Image = ImageUtil.ResizeImage(IconImage.addIcon, 18, 18);
             addTabButton.Size = new Size(28, 28);
-            addTabButton.TextAlign = ContentAlignment.MiddleCenter;
             addTabButton.Margin = new Padding(1);
+            addTabButton.ImageAlign = ContentAlignment.MiddleCenter;
+
+            addTabButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             addTabButton.Click += AddTabButton_Click;
             Controls.Add(addTabButton);
         }
@@ -77,9 +78,10 @@ namespace NotSoBraveBrowser.src.TabControl
         {
             int index = Controls.IndexOf(tab);
 
-            if (Controls[index + 1] is Tab)
+            if (selectedTab != tab) { }
+            else if (Controls[index + 1] is Tab nextTab)
             {
-                SetActiveTab((Tab)Controls[index + 1]);
+                SetActiveTab(nextTab);
             }
             else
             {
@@ -99,7 +101,7 @@ namespace NotSoBraveBrowser.src.TabControl
         public void SetActiveTab(Tab? tab)
         {
             if (selectedTab is not null) selectedTab.BackColor = Color.White;
-            if (tab is not null) tab.BackColor = Color.LightGray;
+            if (tab is not null) tab.BackColor = Color.WhiteSmoke;
 
             selectedTab = tab;
 

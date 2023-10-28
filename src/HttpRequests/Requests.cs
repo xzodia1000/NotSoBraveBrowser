@@ -9,14 +9,10 @@
             client = new HttpClient();
         }
 
-        public async Task<string> Get(string url)
+        public async Task<HttpResponseMessage> Get(string url)
         {
-
-            HttpResponseMessage response = await client.GetAsync(url);
-
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync();
+            Uri uri = new(url);
+            return await client.GetAsync(uri);
         }
     }
 }

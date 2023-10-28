@@ -1,3 +1,4 @@
+using NotSoBraveBrowser.src.Download;
 using NotSoBraveBrowser.src.History;
 
 namespace NotSoBraveBrowser.models
@@ -5,10 +6,12 @@ namespace NotSoBraveBrowser.models
     public class SettingForm
     {
         public HistoryUI HistoryUI { get; set; }
+        public DownloadUI DownloadUI { get; set; }
 
-        public SettingForm(HistoryUI historyUI)
+        public SettingForm(HistoryUI historyUI, DownloadUI downloadUI)
         {
-            this.HistoryUI = historyUI;
+            HistoryUI = historyUI;
+            DownloadUI = downloadUI;
         }
     }
 }

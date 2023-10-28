@@ -57,7 +57,7 @@ namespace NotSoBraveBrowser.src.History
 
             historyTable.Columns.Add("Date", 100);
             historyTable.Columns.Add("Time", 100);
-            historyTable.Columns.Add("URL", 595 - SystemInformation.VerticalScrollBarWidth);
+            historyTable.Columns.Add("URL", 570 - SystemInformation.VerticalScrollBarWidth);
 
             Controls.Add(historyTable);
         }
@@ -85,13 +85,14 @@ namespace NotSoBraveBrowser.src.History
 
         private void UpdateHistoryTable(List<HistoryEntry> historyEntries)
         {
+            historyEntries.Reverse();
             foreach (HistoryEntry entry in historyEntries)
             {
                 historyTable.Items.Add(new ListViewItem(new[] { entry.Time.ToShortDateString(), entry.Time.ToShortTimeString(), entry.Url }));
             }
         }
 
-        public void Open()
+        public void OpenHistory()
         {
             Show();
             UpdateHistoryTable(globalHistory.GetHistory());

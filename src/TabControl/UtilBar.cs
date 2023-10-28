@@ -1,4 +1,5 @@
-﻿using NotSoBraveBrowser.models;
+﻿using NotSoBraveBrowser.lib;
+using NotSoBraveBrowser.models;
 
 namespace NotSoBraveBrowser.src.TabControl
 {
@@ -47,10 +48,12 @@ namespace NotSoBraveBrowser.src.TabControl
         private void InitPrevButton()
         {
             prevButton.Name = "prevButton";
-            prevButton.Text = "<";
+            prevButton.Image = ImageUtil.ResizeImage(IconImage.previousIcon, 18, 18);
             prevButton.Size = new Size(28, 28);
             prevButton.Margin = new Padding(1);
-            prevButton.TextAlign = ContentAlignment.MiddleCenter;
+            prevButton.ImageAlign = ContentAlignment.MiddleCenter;
+
+            prevButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             prevButton.Click += PrevButton_Click;
             Controls.Add(prevButton);
         }
@@ -58,10 +61,12 @@ namespace NotSoBraveBrowser.src.TabControl
         private void InitNextButton()
         {
             nextButton.Name = "nextButton";
-            nextButton.Text = ">";
+            nextButton.Image = ImageUtil.ResizeImage(IconImage.nextIcon, 18, 18);
             nextButton.Size = new Size(28, 28);
             nextButton.Margin = new Padding(1);
-            nextButton.TextAlign = ContentAlignment.MiddleCenter;
+            nextButton.ImageAlign = ContentAlignment.MiddleCenter;
+
+            nextButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             nextButton.Click += NextButton_Click;
             Controls.Add(nextButton);
         }
@@ -69,10 +74,12 @@ namespace NotSoBraveBrowser.src.TabControl
         private void InitRefreshButton()
         {
             refreshButton.Name = "refreshButton";
-            refreshButton.Text = "R";
+            refreshButton.Image = ImageUtil.ResizeImage(IconImage.reloadIcon, 18, 18);
             refreshButton.Size = new Size(28, 28);
             refreshButton.Margin = new Padding(1);
-            refreshButton.TextAlign = ContentAlignment.MiddleCenter;
+            refreshButton.ImageAlign = ContentAlignment.MiddleCenter;
+
+            refreshButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             refreshButton.Click += RefreshButton_Click;
             Controls.Add(refreshButton);
         }
@@ -83,17 +90,18 @@ namespace NotSoBraveBrowser.src.TabControl
             urlTextBox.Text = "http://";
             urlTextBox.Height = 28;
             urlTextBox.Width = Width - 28 * 6;
-            urlTextBox.TextAlign = HorizontalAlignment.Left;
             Controls.Add(urlTextBox);
         }
 
         private void InitGoButton()
         {
             goButton.Name = "goButton";
-            goButton.Text = "G";
+            goButton.Image = ImageUtil.ResizeImage(IconImage.searchIcon, 18, 18);
             goButton.Size = new Size(28, 28);
             goButton.Margin = new Padding(1);
-            goButton.TextAlign = ContentAlignment.MiddleCenter;
+            goButton.ImageAlign = ContentAlignment.MiddleCenter;
+
+            goButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             goButton.Click += GoButton_Click;
             Controls.Add(goButton);
         }
@@ -102,9 +110,12 @@ namespace NotSoBraveBrowser.src.TabControl
         private void InitSettingButton()
         {
             settingButton.Name = "settingButton";
-            settingButton.Image = ResizeImage(IconImage.menuIcon, 22, 22);
+            settingButton.Image = ImageUtil.ResizeImage(IconImage.menuIcon, 18, 18);
             settingButton.Size = new Size(28, 28);
             settingButton.Margin = new Padding(1);
+            settingButton.ImageAlign = ContentAlignment.MiddleCenter;
+
+            settingButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             settingButton.Click += SettingsButton_Click;
             Controls.Add(settingButton);
         }
@@ -114,11 +125,15 @@ namespace NotSoBraveBrowser.src.TabControl
             settingsMenu.Name = "settingsMenu";
 
             ToolStripMenuItem historyItem = new("History");
-            historyItem.Click += (sender, e) => settingForm.HistoryUI.Open();
+            historyItem.Click += (sender, e) => settingForm.HistoryUI.OpenHistory();
             settingsMenu.Items.Add(historyItem);
 
             settingsMenu.Items.Add("Bookmarks");
-            settingsMenu.Items.Add("Download Manager");
+
+            ToolStripMenuItem downloadItem = new("Download");
+            downloadItem.Click += (sender, e) => settingForm.DownloadUI.OpenDownload();
+            settingsMenu.Items.Add(downloadItem);
+
             settingsMenu.Items.Add("Change Homepage");
         }
 
@@ -156,10 +171,6 @@ namespace NotSoBraveBrowser.src.TabControl
             urlTextBox.Width = Width - 28 * 6;
         }
 
-        private static Image ResizeImage(Image image, int width, int height)
-        {
-            Bitmap bitmap = new(image, new Size(width, height));
-            return bitmap;
-        }
+
     }
 }
