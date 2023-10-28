@@ -17,7 +17,7 @@ namespace NotSoBraveBrowser.src.TabControl
         private readonly Requests client;
         public TabContent content;
         private readonly Button closeButton;
-        private readonly TabHistory tabHistory;
+        public readonly TabHistory tabHistory;
 
         public Tab(string tabTitle, TabPanel panel, SettingForm settingForm)
         {
@@ -149,14 +149,21 @@ namespace NotSoBraveBrowser.src.TabControl
             UpdateTabTitle();
             UpdateBrowserTitle();
             content.utilBar.UpdateBookmarkButton();
+            content.utilBar.UpdateBackForwardButtons();
         }
 
         public string GoBack()
         {
+            if (!tabHistory.CanGoBack())
+            {
+                return "";
+            }
+
             string? url = tabHistory.PrevUrl();
 
             if (url is not null)
             {
+                Console.WriteLine("test back " + url);
                 RenderCode(url, true);
             }
 
@@ -165,10 +172,16 @@ namespace NotSoBraveBrowser.src.TabControl
 
         public string GoForward()
         {
+            if (!tabHistory.CanGoForward())
+            {
+                return "";
+            }
+
             string? url = tabHistory.NextUrl();
 
             if (url is not null)
             {
+                Console.WriteLine("test forward " + url);
                 RenderCode(url, true);
             }
 
@@ -194,7 +207,6 @@ namespace NotSoBraveBrowser.src.TabControl
 
             if (match.Success)
             {
-                Console.WriteLine("test" + match.Groups[1].Value.Trim());
                 return match.Groups[1].Value.Trim();
             }
 
@@ -206,7 +218,6 @@ namespace NotSoBraveBrowser.src.TabControl
             using (Graphics g = CreateGraphics())
             {
                 SizeF size = g.MeasureString(tabTitle, Font);
-
                 if (size.Width > Width - 27 && tabTitle.Length != 7)
                 {
                     return string.Concat(tabTitle.AsSpan(0, 7), "...");

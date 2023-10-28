@@ -60,6 +60,7 @@ namespace NotSoBraveBrowser.src.TabControl
             prevButton.Size = new Size(28, 28);
             prevButton.Margin = new Padding(1);
             prevButton.ImageAlign = ContentAlignment.MiddleCenter;
+            prevButton.Enabled = false;
 
             prevButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             prevButton.Click += PrevButton_Click;
@@ -73,6 +74,7 @@ namespace NotSoBraveBrowser.src.TabControl
             nextButton.Size = new Size(28, 28);
             nextButton.Margin = new Padding(1);
             nextButton.ImageAlign = ContentAlignment.MiddleCenter;
+            nextButton.Enabled = false;
 
             nextButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             nextButton.Click += NextButton_Click;
@@ -228,6 +230,15 @@ namespace NotSoBraveBrowser.src.TabControl
         private void SettingsButton_Click(object sender, EventArgs e)
         {
             settingsMenu.Show(settingButton, new Point(-settingsMenu.Width + settingButton.Width, settingButton.Height));
+        }
+
+        public void UpdateBackForwardButtons()
+        {
+            if (tab.tabHistory.CanGoBack()) prevButton.Enabled = true;
+            else prevButton.Enabled = false;
+
+            if (tab.tabHistory.CanGoForward()) nextButton.Enabled = true;
+            else nextButton.Enabled = false;
         }
 
         public void UpdateBookmarkButton()

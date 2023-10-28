@@ -37,6 +37,16 @@ namespace NotSoBraveBrowser.src.History
             return null; // or throw an exception or handle as you see fit
         }
 
+        public bool CanGoBack()
+        {
+            return currentNode?.Prev != null;
+        }
+
+        public bool CanGoForward()
+        {
+            return currentNode?.Next != null;
+        }
+
         public string? GetCurrentUrl()
         {
             return currentNode?.Url;
