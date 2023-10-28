@@ -10,6 +10,7 @@ namespace NotSoBraveBrowser.src.TabControl
         bool? isBookmark = null;
         private readonly Button prevButton;
         private readonly Button nextButton;
+        private readonly Button homeButton;
         private readonly Button refreshButton;
         public readonly TextBox urlTextBox;
         private readonly Button goButton;
@@ -25,6 +26,7 @@ namespace NotSoBraveBrowser.src.TabControl
 
             prevButton = new Button();
             nextButton = new Button();
+            homeButton = new Button();
             refreshButton = new Button();
             urlTextBox = new TextBox();
             goButton = new Button();
@@ -35,6 +37,7 @@ namespace NotSoBraveBrowser.src.TabControl
             InitUtilBar();
             InitPrevButton();
             InitNextButton();
+            InitHomeButton();
             InitRefreshButton();
             InitUrlTextBox();
             InitGoButton();
@@ -76,6 +79,19 @@ namespace NotSoBraveBrowser.src.TabControl
             Controls.Add(nextButton);
         }
 
+        private void InitHomeButton()
+        {
+            homeButton.Name = "homeButton";
+            homeButton.Image = ImageUtil.ResizeImage(IconImage.homeIcon, 18, 18);
+            homeButton.Size = new Size(28, 28);
+            homeButton.Margin = new Padding(1);
+            homeButton.ImageAlign = ContentAlignment.MiddleCenter;
+
+            homeButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
+            homeButton.Click += (sender, e) => tab.RenderCode(settingForm.HomeUI.homeManager.GetHome());
+            Controls.Add(homeButton);
+        }
+
         private void InitRefreshButton()
         {
             refreshButton.Name = "refreshButton";
@@ -94,7 +110,7 @@ namespace NotSoBraveBrowser.src.TabControl
             urlTextBox.Name = "urlTextBox";
             urlTextBox.Text = "http://";
             urlTextBox.Height = 28;
-            urlTextBox.Width = Width - 28 * 7;
+            urlTextBox.Width = Width - 28 * 8;
             Controls.Add(urlTextBox);
         }
 
@@ -149,11 +165,13 @@ namespace NotSoBraveBrowser.src.TabControl
             bookmarkItem.Click += (sender, e) => settingForm.BookmarkUI.OpenBookmark();
             settingsMenu.Items.Add(bookmarkItem);
 
-            ToolStripMenuItem downloadItem = new("Download");
+            ToolStripMenuItem downloadItem = new("Download Manager");
             downloadItem.Click += (sender, e) => settingForm.DownloadUI.OpenDownload();
             settingsMenu.Items.Add(downloadItem);
 
-            settingsMenu.Items.Add("Change Homepage");
+            ToolStripMenuItem homeItem = new("Change Homepage");
+            homeItem.Click += (sender, e) => settingForm.HomeUI.OpenHome();
+            settingsMenu.Items.Add(homeItem);
         }
 
         private void PrevButton_Click(object sender, EventArgs e)
@@ -228,7 +246,7 @@ namespace NotSoBraveBrowser.src.TabControl
         public void UpdateSize(FlowLayoutPanel canvas)
         {
             Width = canvas.Width;
-            urlTextBox.Width = Width - 28 * 7;
+            urlTextBox.Width = Width - 28 * 8;
         }
 
 

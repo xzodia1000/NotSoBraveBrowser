@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using System.Xml;
 using NotSoBraveBrowser.lib;
 using NotSoBraveBrowser.models;
 using NotSoBraveBrowser.src.History;
@@ -89,21 +90,21 @@ namespace NotSoBraveBrowser.src.TabControl
             panel.CloseTab(this);
         }
 
-        public async void RenderCode(string Url, bool isHistory = false)
+        public async void RenderCode(string url, bool isHistory = false)
         {
-            if (string.IsNullOrEmpty(Url) || Url.Equals("http://") || Url.Equals("https://"))
+
+            if (UrlUtils.IsEmptyUrl(url))
             {
                 return;
             }
+            url = UrlUtils.AddHttp(url);
 
-            Url = (Url.StartsWith("http://") || Url.StartsWith("https://")) ? Url : "http://" + Url;
-
-            content.utilBar.urlTextBox.Text = Url;
+            content.utilBar.urlTextBox.Text = url;
             content.UpdateContent("Loading...", true);
 
             try
             {
-                HttpResponseMessage response = await Task.Run(() => client.Get(Url));
+                HttpResponseMessage response = await Task.Run(() => client.Get(url));
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -122,7 +123,7 @@ namespace NotSoBraveBrowser.src.TabControl
             }
             catch (UriFormatException)
             {
-                content.renderedContent.Text = "Invalid URL";
+                content.UpdateContent("Invalid URL", true);
                 tabTitle = "Invalid URL";
                 browserTitle = "Invalid URL";
             }
@@ -139,10 +140,10 @@ namespace NotSoBraveBrowser.src.TabControl
                 browserTitle = content.renderedContent.Text;
             }
 
-            if (!isHistory && tabHistory.GetCurrentUrl() != Url)
+            if (!isHistory && tabHistory.GetCurrentUrl() != url)
             {
-                tabHistory.Visit(Url);
-                settingForm.HistoryUI.globalHistory.AddHistory(Url);
+                tabHistory.Visit(url);
+                settingForm.HistoryUI.globalHistory.AddHistory(url);
             }
 
             UpdateTabTitle();

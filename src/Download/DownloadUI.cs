@@ -35,7 +35,7 @@ namespace NotSoBraveBrowser.src.Download
 
         private void InitDownloadUI()
         {
-            Text = "Downloads";
+            Text = "Download Manager";
             Size = new Size(800, 600);
             StartPosition = FormStartPosition.CenterScreen;
             BackColor = Color.White;

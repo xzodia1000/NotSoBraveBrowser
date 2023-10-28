@@ -2,6 +2,7 @@ using NotSoBraveBrowser.models;
 using NotSoBraveBrowser.src.Bookmark;
 using NotSoBraveBrowser.src.Download;
 using NotSoBraveBrowser.src.History;
+using NotSoBraveBrowser.src.Home;
 using NotSoBraveBrowser.src.TabControl;
 
 namespace NotSoBraveBrowser.src.Browser
@@ -13,6 +14,7 @@ namespace NotSoBraveBrowser.src.Browser
         private readonly HistoryUI historyUI;
         private readonly DownloadUI downloadUI;
         private readonly BookmarkUI bookmarkUI;
+        private readonly HomeUI homeUI;
         private readonly SettingForm settingForm;
 
         public BrowserForm()
@@ -22,7 +24,8 @@ namespace NotSoBraveBrowser.src.Browser
             historyUI = new HistoryUI(this);
             downloadUI = new DownloadUI(this);
             bookmarkUI = new BookmarkUI(this);
-            settingForm = new SettingForm(historyUI, downloadUI, bookmarkUI);
+            homeUI = new HomeUI(this);
+            settingForm = new SettingForm(historyUI, downloadUI, bookmarkUI, homeUI);
             tabPanel = new TabPanel(canvas, settingForm);
         }
 
@@ -37,7 +40,7 @@ namespace NotSoBraveBrowser.src.Browser
 
             tabPanel.UpdatePanelWidth();
             CreateMenu();
-            NewTab("New Tab", "http://status.savanttools.com/?code=401%20Unauthorized");
+            NewTab("New Tab", homeUI.homeManager.GetHome());
         }
 
         private void Browser_Resize(object sender, EventArgs e)

@@ -6,7 +6,7 @@ namespace NotSoBraveBrowser.src.Bookmark
     public class BookmarkUI : Form
     {
         private readonly BrowserForm browserForm;
-        public BookmarkManager bookmarkManager { get; }
+        public BookmarkManager bookmarkManager;
         private readonly ListView bookmarkTable;
 
         public BookmarkUI(BrowserForm browserForm)
