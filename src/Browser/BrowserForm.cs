@@ -67,7 +67,7 @@ namespace NotSoBraveBrowser.src.Browser
          */
         private void Browser_Resize(object sender, EventArgs e)
         {
-            tabPanel.UpdatePanelWidth(); // Update the tab panel width
+            tabPanel?.UpdatePanelWidth(); // Update the tab panel width
         }
 
         /**
