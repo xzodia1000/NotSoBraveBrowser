@@ -2,8 +2,15 @@ using NotSoBraveBrowser.models;
 
 namespace NotSoBraveBrowser.lib
 {
+    /**
+     * KeyboardShortcutData is a class that stores the keyboard shortcuts data.
+     */
     public class KeyboardShortcutData
     {
+        /**
+         * data is a list of KeyboardShortcut objects.
+         * It stores the keyboard shortcuts data.
+         */
         public static readonly KeyboardShortcut[] data = new KeyboardShortcut[]
         {
 
