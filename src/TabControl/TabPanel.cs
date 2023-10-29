@@ -97,7 +97,7 @@ namespace NotSoBraveBrowser.src.TabControl
          * The object is the object that triggered the event.
          * The EventArgs is the event arguments.
          */
-        private void AddTabButton_Click(object sender, EventArgs e)
+        private void AddTabButton_Click(object? sender, EventArgs e)
         {
             AddTab("New Tab"); // Add a new tab
         }

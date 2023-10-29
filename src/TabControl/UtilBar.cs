@@ -232,7 +232,7 @@ namespace NotSoBraveBrowser.src.TabControl
          * PrevButton_Click is the event handler for the prevButton.
          * It goes back to the previous page.
          */
-        private void PrevButton_Click(object sender, EventArgs e)
+        private void PrevButton_Click(object? sender, EventArgs e)
         {
             string url = tab.GoBack(); // Go back to the previous page
             urlTextBox.Text = url; // Set the URL to the previous page
@@ -242,7 +242,7 @@ namespace NotSoBraveBrowser.src.TabControl
          * NextButton_Click is the event handler for the nextButton.
          * It goes forward to the next page.
          */
-        private void NextButton_Click(object sender, EventArgs e)
+        private void NextButton_Click(object? sender, EventArgs e)
         {
             string url = tab.GoForward(); // Go forward to the next page
             urlTextBox.Text = url; // Set the URL to the next page
@@ -252,7 +252,7 @@ namespace NotSoBraveBrowser.src.TabControl
          * ReloadButton_Click is the event handler for the reloadButton.
          * It reloads the page.
          */
-        private void ReloadButton_Click(object sender, EventArgs e)
+        private void ReloadButton_Click(object? sender, EventArgs e)
         {
             string url = tab.Reload(); // Reload the page
             urlTextBox.Text = url;
@@ -264,7 +264,7 @@ namespace NotSoBraveBrowser.src.TabControl
          * The object is the object that triggered the event.
          * The KeyEventArgs is the event arguments.
          */
-        private void UrlTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void UrlTextBox_KeyDown(object? sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -281,7 +281,7 @@ namespace NotSoBraveBrowser.src.TabControl
          * GoButton_Click is the event handler for the goButton.
          * It goes to the URL.
          */
-        private void GoButton_Click(object sender, EventArgs e)
+        private void GoButton_Click(object? sender, EventArgs e)
         {
             tab.RenderCode(urlTextBox.Text); // Go to the URL
         }
@@ -290,7 +290,7 @@ namespace NotSoBraveBrowser.src.TabControl
          * BookmarkButton_Click is the event handler for the bookmarkButton.
          * It adds or removes the bookmark.
          */
-        private void BookmarkButton_Click(object sender, EventArgs e)
+        private void BookmarkButton_Click(object? sender, EventArgs e)
         {
             if (isBookmark == true)
             {
@@ -306,7 +306,7 @@ namespace NotSoBraveBrowser.src.TabControl
          * SettingsButton_Click is the event handler for the settingButton.
          * It opens the settings menu.
          */
-        private void SettingsButton_Click(object sender, EventArgs e)
+        private void SettingsButton_Click(object? sender, EventArgs e)
         {
             // Open the settings menu and not let it overflow outside the screen
             settingsMenu.Show(settingButton, new Point(-settingsMenu.Width + settingButton.Width, settingButton.Height));

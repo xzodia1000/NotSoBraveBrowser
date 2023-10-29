@@ -85,7 +85,7 @@ namespace NotSoBraveBrowser.src.Home
          * It takes a FormClosingEventArgs object as a parameter.
          * It enables the browser form and hides the add bookmark UI.
          */
-        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
@@ -99,7 +99,7 @@ namespace NotSoBraveBrowser.src.Home
          * It takes a object and a EventArgs object as parameters.
          * It adds the bookmark to the bookmarks file.
          */
-        private void AddBookmarkButton_Click(object sender, EventArgs e)
+        private void AddBookmarkButton_Click(object? sender, EventArgs e)
         {
             bookmarkManager.AddBookmark(url, nameTextBox.Text); // Add the bookmark to the bookmarks file
             CloseAddBookmark(); // Close the add bookmark UI

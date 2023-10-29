@@ -54,7 +54,7 @@ namespace NotSoBraveBrowser.src.Browser
             Controls.Add(shortcutTable);
         }
 
-        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_FormClosing(object? sender, FormClosingEventArgs e)
         {
             browserForm.Enabled = true;
             if (e.CloseReason == CloseReason.UserClosing)

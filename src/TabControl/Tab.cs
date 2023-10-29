@@ -106,7 +106,7 @@ namespace NotSoBraveBrowser.src.TabControl
         /**
          * CloseButton_Click is a method that closes the current tab.
          */
-        private void CloseButton_Click(object sender, EventArgs e)
+        private void CloseButton_Click(object? sender, EventArgs e)
         {
             panel.CloseTab(this);
         }

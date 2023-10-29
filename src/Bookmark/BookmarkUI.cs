@@ -79,7 +79,7 @@ namespace NotSoBraveBrowser.src.Bookmark
          * It takes a FormClosingEventArgs object as a parameter.
          * It cancels the form close request and hides the form so it can be reopened later.
          */
-        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
@@ -94,7 +94,7 @@ namespace NotSoBraveBrowser.src.Bookmark
          * It takes an object and an EventArgs object as parameters.
          * It opens the URL of the bookmark in a new tab.
          */
-        private void BookmarkTable_Click(object sender, EventArgs e)
+        private void BookmarkTable_Click(object? sender, EventArgs e)
         {
             string url = bookmarkTable.SelectedItems[0].SubItems[2].Text; // Get the URL of the bookmark
             browserForm.NewTab("New Tab", url);
@@ -105,7 +105,7 @@ namespace NotSoBraveBrowser.src.Bookmark
          * It takes an object and a MouseEventArgs object as parameters.
          * It changes the cursor to a hand cursor if the mouse is over a bookmark.
          */
-        private void BookmarkTable_MouseMove(object sender, MouseEventArgs e)
+        private void BookmarkTable_MouseMove(object? sender, MouseEventArgs e)
         {
             ListViewItem? item = bookmarkTable.GetItemAt(e.X, e.Y);
 

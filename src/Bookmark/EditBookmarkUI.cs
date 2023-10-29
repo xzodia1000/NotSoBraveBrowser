@@ -102,7 +102,7 @@ namespace NotSoBraveBrowser.src.Home
          * It takes a FormClosingEventArgs object as a parameter.
          * It enables the browser form and hides the edit bookmark UI.
          */
-        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
@@ -116,7 +116,7 @@ namespace NotSoBraveBrowser.src.Home
          * It takes a object and a EventArgs object as parameters.
          * It edits the name of the bookmark in the bookmarks file.
          */
-        private void EditBookmarkButton_Click(object sender, EventArgs e)
+        private void EditBookmarkButton_Click(object? sender, EventArgs e)
         {
             bookmarkManager.EditBookmark(url, nameTextBox.Text); // Set the home page to the text of the home text box
             CloseEditBookmark();
@@ -127,7 +127,7 @@ namespace NotSoBraveBrowser.src.Home
          * It takes a object and a EventArgs object as parameters.
          * It deletes the bookmark from the bookmarks file.
          */
-        private void DeleteBookmarkButton_Click(object sender, EventArgs e)
+        private void DeleteBookmarkButton_Click(object? sender, EventArgs e)
         {
             bookmarkManager.RemoveBookmark(url);
             CloseEditBookmark();

@@ -77,7 +77,7 @@ namespace NotSoBraveBrowser.src.History
          * It takes a FormClosingEventArgs object as a parameter.
          * It cancels the form close request and hides the form.
          */
-        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
@@ -92,7 +92,7 @@ namespace NotSoBraveBrowser.src.History
          * It takes an object and an EventArgs object as parameters.
          * It opens a new tab with the URL of the history entry.
          */
-        private void HistoryTable_Click(object sender, EventArgs e)
+        private void HistoryTable_Click(object? sender, EventArgs e)
         {
             // Open a new tab with the URL of the history entry
             string url = historyTable.SelectedItems[0].SubItems[2].Text;
@@ -104,7 +104,7 @@ namespace NotSoBraveBrowser.src.History
          * It takes an object and a MouseEventArgs object as parameters.
          * It changes the cursor to a hand cursor if the mouse is over a history entry.
          */
-        private void HistoryTable_MouseMove(object sender, MouseEventArgs e)
+        private void HistoryTable_MouseMove(object? sender, MouseEventArgs e)
         {
             // Change the cursor to a hand cursor if the mouse is over a history entry
             ListViewItem? item = historyTable.GetItemAt(e.X, e.Y);

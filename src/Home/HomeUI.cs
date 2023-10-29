@@ -81,7 +81,7 @@ namespace NotSoBraveBrowser.src.Home
          * It takes a FormClosingEventArgs object as a parameter.
          * It enables the browser form and hides the home UI.
          */
-        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_FormClosing(object? sender, FormClosingEventArgs e)
         {
             browserForm.Enabled = true; // Enable the browser form
 
@@ -99,7 +99,7 @@ namespace NotSoBraveBrowser.src.Home
          * It sets the home page to the text of the home text box.
          * It also shows a message box to indicate that the home page is set.
          */
-        private async void SetHomeButton_Click(object sender, EventArgs e)
+        private async void SetHomeButton_Click(object? sender, EventArgs e)
         {
             bool setHome = await homeManager.SetHome(homeTextBox.Text);
             if (setHome)
