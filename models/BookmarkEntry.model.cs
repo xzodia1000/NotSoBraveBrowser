@@ -6,16 +6,16 @@ namespace NotSoBraveBrowser.models
     public class BookmarkEntry
     {
         public string Url { get; set; } // The URL of the bookmark
-        public DateTime Time { get; set; } // The time when the bookmark was added
+        public string Name { get; set; } // The name of the bookmark
 
         /**
          * BookmarkEntry is the constructor of the BookmarkEntry class.
          * It initializes the URL and the time of the bookmark.
          */
-        public BookmarkEntry(string url, DateTime time)
+        public BookmarkEntry(string url, string name)
         {
             Url = url;
-            Time = time;
+            Name = name;
         }
     }
 }

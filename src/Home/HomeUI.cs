@@ -99,11 +99,20 @@ namespace NotSoBraveBrowser.src.Home
          * It sets the home page to the text of the home text box.
          * It also shows a message box to indicate that the home page is set.
          */
-        private void SetHomeButton_Click(object sender, EventArgs e)
+        private async void SetHomeButton_Click(object sender, EventArgs e)
         {
-            homeManager.SetHome(homeTextBox.Text); // Set the home page to the text of the home text box
-            homeTextBox.Text = homeManager.GetHome();
-            MessageBox.Show("Home set to " + homeTextBox.Text);
+            bool setHome = await homeManager.SetHome(homeTextBox.Text);
+            if (setHome)
+            {
+                // Set the home page to the text of the home text box
+                homeTextBox.Text = homeManager.GetHome();
+                MessageBox.Show("Home set to " + homeTextBox.Text);
+            }
+            else
+            {
+                MessageBox.Show("Invalid URL");
+            }
+
         }
 
         /**

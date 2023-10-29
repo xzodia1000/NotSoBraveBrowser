@@ -63,10 +63,10 @@ namespace NotSoBraveBrowser.src.Bookmark
          * It creates a new BookmarkEntry object and adds it to the bookmarks file.
          * If the file is corrupted, it deletes the file and adds the bookmark.
          */
-        public void AddBookmark(string url)
+        public void AddBookmark(string url, string name)
         {
             FileUtils.EnsureFileExists(filePath); // Ensure that the file exists
-            BookmarkEntry entry = new(url, DateTime.Now); // Create a new BookmarkEntry object
+            BookmarkEntry entry = new(url, name); // Create a new BookmarkEntry object
 
             try
             {
@@ -79,7 +79,7 @@ namespace NotSoBraveBrowser.src.Bookmark
             {
                 // If the file is corrupted, delete the file and add the bookmark
                 File.Delete(filePath);
-                AddBookmark(url);
+                AddBookmark(url, name);
             }
         }
 
@@ -105,6 +105,44 @@ namespace NotSoBraveBrowser.src.Bookmark
                 // If the file is corrupted, delete the file
                 File.Delete(filePath);
                 return;
+            }
+        }
+
+        public void EditBookmark(string url, string name)
+        {
+            FileUtils.EnsureFileExists(filePath); // Ensure that the file exists
+
+            try
+            {
+                List<BookmarkEntry> bookmarkEntries = GetBookmarks();
+                bookmarkEntries.RemoveAll(entry => UrlUtils.NormalizeUrl(entry.Url).Equals(UrlUtils.NormalizeUrl(url))); // Remove the bookmark from the list (Linq)
+                BookmarkEntry entry = new(url, name); // Create a new BookmarkEntry object
+                bookmarkEntries.Add(entry); // Add the new BookmarkEntry object to the list
+                string jsonString = JsonSerializer.Serialize(bookmarkEntries); // Serialize the list of BookmarkEntry objects into a JSON string
+                File.WriteAllText(filePath, jsonString); // Write the JSON string to the file
+            }
+            catch (JsonException)
+            {
+                // If the file is corrupted, delete the file and add the bookmark
+                File.Delete(filePath);
+                AddBookmark(url, name);
+            }
+        }
+
+        public string? GetName(string url)
+        {
+            FileUtils.EnsureFileExists(filePath); // Ensure that the file exists
+
+            try
+            {
+                List<BookmarkEntry> bookmarkEntries = GetBookmarks();
+                return bookmarkEntries.Find(entry => UrlUtils.NormalizeUrl(entry.Url).Equals(UrlUtils.NormalizeUrl(url), StringComparison.Ordinal))?.Name; // Remove the bookmark from the list (Linq)
+            }
+            catch (JsonException)
+            {
+                // If the file is corrupted, delete the file and add the bookmark
+                File.Delete(filePath);
+                return "";
             }
         }
 

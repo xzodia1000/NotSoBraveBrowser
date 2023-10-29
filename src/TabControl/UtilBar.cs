@@ -62,6 +62,7 @@ namespace NotSoBraveBrowser.src.TabControl
             Height = 30;
             BackColor = Color.White;
             FlowDirection = FlowDirection.LeftToRight;
+            MouseHover += (sender, e) => Cursor = Cursors.Default;
         }
 
         /**
@@ -77,7 +78,6 @@ namespace NotSoBraveBrowser.src.TabControl
             prevButton.ImageAlign = ContentAlignment.MiddleCenter;
             prevButton.Enabled = false;
 
-            prevButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             prevButton.Click += PrevButton_Click;
             Controls.Add(prevButton); // Add the button to the UtilBar
         }
@@ -95,7 +95,6 @@ namespace NotSoBraveBrowser.src.TabControl
             nextButton.ImageAlign = ContentAlignment.MiddleCenter;
             nextButton.Enabled = false;
 
-            nextButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             nextButton.Click += NextButton_Click;
             Controls.Add(nextButton); // Add the button to the UtilBar
         }
@@ -112,7 +111,7 @@ namespace NotSoBraveBrowser.src.TabControl
             homeButton.Margin = new Padding(1);
             homeButton.ImageAlign = ContentAlignment.MiddleCenter;
 
-            homeButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
+            homeButton.MouseHover += (sender, e) => homeButton.Cursor = Cursors.Hand;
             homeButton.Click += (sender, e) => tab.RenderCode(settingForm.HomeUI.homeManager.GetHome()); // Go to the homepage when clicked
             Controls.Add(homeButton); // Add the button to the UtilBar
         }
@@ -130,7 +129,6 @@ namespace NotSoBraveBrowser.src.TabControl
             reloadButton.ImageAlign = ContentAlignment.MiddleCenter;
             reloadButton.Enabled = false;
 
-            reloadButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
             reloadButton.Click += ReloadButton_Click;
             Controls.Add(reloadButton); // Add the button to the UtilBar
         }
@@ -162,7 +160,7 @@ namespace NotSoBraveBrowser.src.TabControl
             goButton.Margin = new Padding(1);
             goButton.ImageAlign = ContentAlignment.MiddleCenter;
 
-            goButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
+            goButton.MouseHover += (sender, e) => goButton.Cursor = Cursors.Hand;
             goButton.Click += GoButton_Click;
             Controls.Add(goButton);
         }
@@ -196,7 +194,7 @@ namespace NotSoBraveBrowser.src.TabControl
             settingButton.Margin = new Padding(1);
             settingButton.ImageAlign = ContentAlignment.MiddleCenter;
 
-            settingButton.MouseHover += (sender, e) => Cursor = Cursors.Hand;
+            settingButton.MouseHover += (sender, e) => settingButton.Cursor = Cursors.Hand;
             settingButton.Click += SettingsButton_Click;
             Controls.Add(settingButton);
         }
@@ -296,17 +294,11 @@ namespace NotSoBraveBrowser.src.TabControl
         {
             if (isBookmark == true)
             {
-                // Remove the bookmark if the page is bookmarked
-                bookmarkButton.Image = ImageUtil.ResizeImage(IconImage.bookmarkIcon, 18, 18); // Set the icon to the bookmark icon
-                settingForm.BookmarkUI.bookmarkManager.RemoveBookmark(urlTextBox.Text); // Remove the bookmark from the bookmark file
-                isBookmark = false; // Set isBookmark to false
+                settingForm.BookmarkUI.editBookmarkUI.OpenEditBookmark(urlTextBox.Text, UpdateBookmarkButton); // Open the edit bookmark UI
             }
             else if (isBookmark == false)
             {
-                // Add the bookmark if the page is not bookmarked
-                bookmarkButton.Image = ImageUtil.ResizeImage(IconImage.bookmarkFillIcon, 18, 18); // Set the icon to the bookmark fill icon
-                settingForm.BookmarkUI.bookmarkManager.AddBookmark(urlTextBox.Text); // Add the bookmark to the bookmark file
-                isBookmark = true; // Set isBookmark to true
+                settingForm.BookmarkUI.addBookmarkUI.OpenAddBookmark(urlTextBox.Text, UpdateBookmarkButton); // Open the add bookmark UI
             }
         }
 
@@ -326,11 +318,27 @@ namespace NotSoBraveBrowser.src.TabControl
          */
         public void UpdateBackForwardButtons()
         {
-            if (tab.tabHistory.CanGoBack()) prevButton.Enabled = true;
-            else prevButton.Enabled = false;
+            if (tab.tabHistory.CanGoBack())
+            {
+                prevButton.MouseHover += (sender, e) => prevButton.Cursor = Cursors.Hand;
+                prevButton.Enabled = true;
+            }
+            else
+            {
+                prevButton.MouseHover -= (sender, e) => prevButton.Cursor = Cursors.Hand;
+                prevButton.Enabled = false;
+            }
 
-            if (tab.tabHistory.CanGoForward()) nextButton.Enabled = true;
-            else nextButton.Enabled = false;
+            if (tab.tabHistory.CanGoForward())
+            {
+                nextButton.MouseHover += (sender, e) => nextButton.Cursor = Cursors.Hand;
+                nextButton.Enabled = true;
+            }
+            else
+            {
+                nextButton.MouseHover -= (sender, e) => nextButton.Cursor = Cursors.Hand;
+                nextButton.Enabled = false;
+            }
         }
 
         /**
@@ -339,8 +347,16 @@ namespace NotSoBraveBrowser.src.TabControl
          */
         public void UpdateReloadButton()
         {
-            if (UrlUtils.IsEmptyUrl(urlTextBox.Text)) reloadButton.Enabled = false;
-            else reloadButton.Enabled = true;
+            if (UrlUtils.IsEmptyUrl(urlTextBox.Text))
+            {
+                reloadButton.MouseHover -= (sender, e) => reloadButton.Cursor = Cursors.Hand;
+                reloadButton.Enabled = false;
+            }
+            else
+            {
+                reloadButton.MouseHover += (sender, e) => reloadButton.Cursor = Cursors.Hand;
+                reloadButton.Enabled = true;
+            }
         }
 
         /**

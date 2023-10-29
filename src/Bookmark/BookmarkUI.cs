@@ -1,5 +1,6 @@
 using NotSoBraveBrowser.models;
 using NotSoBraveBrowser.src.Browser;
+using NotSoBraveBrowser.src.Home;
 
 namespace NotSoBraveBrowser.src.Bookmark
 {
@@ -10,6 +11,8 @@ namespace NotSoBraveBrowser.src.Bookmark
     {
         private readonly BrowserForm browserForm; // The main form of the browser
         public BookmarkManager bookmarkManager; // The bookmark manager
+        public AddBookmarkUI addBookmarkUI; // The add bookmark UI
+        public EditBookmarkUI editBookmarkUI; // The edit bookmark UI
         private readonly ListView bookmarkTable; // The bookmark table that displays the bookmarks
 
         /**
@@ -21,6 +24,8 @@ namespace NotSoBraveBrowser.src.Bookmark
         {
             this.browserForm = browserForm;
             bookmarkManager = new BookmarkManager();
+            addBookmarkUI = new AddBookmarkUI(browserForm, bookmarkManager);
+            editBookmarkUI = new EditBookmarkUI(browserForm, bookmarkManager);
             bookmarkTable = new ListView();
 
             InitBookmarkUI();
@@ -63,8 +68,7 @@ namespace NotSoBraveBrowser.src.Bookmark
             bookmarkTable.MouseMove += BookmarkTable_MouseMove; // Set the event handler for the mouse move event
             bookmarkTable.Click += BookmarkTable_Click; // Set the event handler for the click event
 
-            bookmarkTable.Columns.Add("Date", 100);
-            bookmarkTable.Columns.Add("Time", 100);
+            bookmarkTable.Columns.Add("Name", 200);
             bookmarkTable.Columns.Add("URL", 570 - SystemInformation.VerticalScrollBarWidth);
 
             Controls.Add(bookmarkTable);
@@ -125,7 +129,7 @@ namespace NotSoBraveBrowser.src.Bookmark
             foreach (BookmarkEntry entry in bookmarkEntries)
             {
                 // Add the bookmark to the bookmark table
-                bookmarkTable.Items.Add(new ListViewItem(new[] { entry.Time.ToShortDateString(), entry.Time.ToShortTimeString(), entry.Url }));
+                bookmarkTable.Items.Add(new ListViewItem(new[] { entry.Name, entry.Url }));
             }
         }
 
