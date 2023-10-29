@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<DisableWinExeOutputInference>true</DisableWinExeOutputInference>
+	  <DisableWinExeOutputInference>true</DisableWinExeOutputInference>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,10 +23,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IconImage.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Svg" Version="3.4.4" />
   </ItemGroup>
 
 </Project>
