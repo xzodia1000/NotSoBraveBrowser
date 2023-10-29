@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using System.Xml;
 using NotSoBraveBrowser.lib;
 using NotSoBraveBrowser.models;
 using NotSoBraveBrowser.src.History;

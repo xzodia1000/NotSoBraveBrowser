@@ -9,7 +9,17 @@ namespace NotSoBraveBrowser.src.Download
      */
     public class DownloadManager
     {
+        private static readonly List<string> urls = new() {
+            "https://www.hw.ac.uk/",
+            "https://www.google.com/",
+            "https://www.duckduckgo.com/",
+            "http://status.savanttools.com/?code=400%20Bad%20Request",
+            "http://status.savanttools.com/?code=403%20Forbidden",
+            "http://status.savanttools.com/?code=404%20Not%20Found"
+        }; // List of default URLs
+
         private readonly Requests client; // The HTTP client
+        private readonly string defaultFilePath; // Path to the default downloads file
 
         /**
          * DownloadManager is the constructor of the DownloadManager class.
@@ -18,6 +28,30 @@ namespace NotSoBraveBrowser.src.Download
         public DownloadManager()
         {
             client = new Requests();
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData); // Get the local app data folder
+            defaultFilePath = Path.Combine(path, "NotSoBraveBrowser", "bulk.txt"); // Set the path to the default downloads file
+
+            SetDefaultDownloads(); // Set the default downloads
+        }
+
+        /**
+         * SetDefaultDownloads is a method that sets the default downloads.
+         * It writes the URLs to the default downloads file.
+         */
+        private void SetDefaultDownloads()
+        {
+            if (FileUtils.EnsureFileExists(defaultFilePath) && File.ReadAllText(defaultFilePath).Trim().Length > 0)
+            {
+                // If the file exists and is not empty, do nothing
+                return;
+            }
+
+            // Write the URLs to the default downloads file
+            foreach (string url in urls)
+            {
+                File.AppendAllText(defaultFilePath, url + Environment.NewLine);
+            }
+
         }
 
         /**
@@ -27,6 +61,8 @@ namespace NotSoBraveBrowser.src.Download
          */
         public async Task<List<BulkDownload>> GetBulkDownloads(string filePath)
         {
+            if (string.IsNullOrEmpty(filePath)) filePath = defaultFilePath; // If the file path is empty, set it to the default downloads file
+
             List<BulkDownload> bulkDownloads = new(); // List of BulkDownload objects
             string? line; // A line from the file
 

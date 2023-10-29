@@ -93,7 +93,7 @@ namespace NotSoBraveBrowser.src.Download
 
 
             downloadText.Name = "downloadText";
-            downloadText.Text = "Drag and drop or attach file to download.";
+            downloadText.Text = "Drag and drop or attach file to download." + Environment.NewLine + "Default file: bulk.txt in local app data folder.";
             downloadText.Dock = DockStyle.Fill; // Fill the empty panel with the label
             downloadText.TextAlign = ContentAlignment.MiddleCenter;
             downloadText.Font = new Font("Roboto", 12F, FontStyle.Bold);
@@ -136,7 +136,7 @@ namespace NotSoBraveBrowser.src.Download
             downloadButton.Name = "downloadButton";
             downloadButton.Text = "Download";
             downloadButton.Dock = DockStyle.Fill; // Fill the download panel with the button
-            downloadButton.Enabled = false;
+            downloadButton.Enabled = true;
 
             // Set the cursor to default when the mouse hovers over the button
             downloadButton.MouseHover += (sender, e) => downloadButton.Cursor = Cursors.Hand;
@@ -164,7 +164,7 @@ namespace NotSoBraveBrowser.src.Download
             downloadText.MouseHover += (sender, e) => downloadText.Cursor = Cursors.Hand;
             downloadButton.MouseHover += (sender, e) => downloadButton.Cursor = Cursors.Hand;
 
-            UpdatePanelText("Drag and drop or attach file to download.");
+            UpdatePanelText("Drag and drop or attach file to download." + Environment.NewLine + "Default file: bulk.txt in local app data folder.");
 
             if (e.CloseReason == CloseReason.UserClosing)
             {
