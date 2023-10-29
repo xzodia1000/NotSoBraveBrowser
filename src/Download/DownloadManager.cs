@@ -37,7 +37,7 @@ namespace NotSoBraveBrowser.src.Download
                     try
                     {
                         line = UrlUtils.AddHttp(line); // Add http:// to the URL if it doesn't have it
-                        HttpResponseMessage response = await client.Get(line); // Send a GET request to the URL
+                        HttpResponseMessage response = await Task.Run(() => client.Get(line));; // Send a GET request to the URL
 
                         if (response.IsSuccessStatusCode)
                         {

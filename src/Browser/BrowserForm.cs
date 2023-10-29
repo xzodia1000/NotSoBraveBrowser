@@ -7,17 +7,24 @@ using NotSoBraveBrowser.src.TabControl;
 
 namespace NotSoBraveBrowser.src.Browser
 {
+    /**
+     * BrowserForm is the main form of the browser.
+     * It contains the canvas, the tabPanel, and the settingForm.
+     */
     public partial class BrowserForm : Form
     {
-        public FlowLayoutPanel canvas;
-        private readonly TabPanel tabPanel;
-        private readonly HistoryUI historyUI;
-        private readonly DownloadUI downloadUI;
-        private readonly BookmarkUI bookmarkUI;
-        private readonly HomeUI homeUI;
-        private readonly ShortcutUI shortcutUI;
-        private readonly SettingForm settingForm;
+        public FlowLayoutPanel canvas; // Main canvas of the browser
+        private readonly TabPanel tabPanel; // TabPanel object that contains the tabs
+        private readonly HistoryUI historyUI; // HistoryUI object that contains the history
+        private readonly DownloadUI downloadUI; // DownloadUI object that contains the downloads
+        private readonly BookmarkUI bookmarkUI; // BookmarkUI object that contains the bookmarks
+        private readonly HomeUI homeUI; // HomeUI object that contains the home
+        private readonly ShortcutUI shortcutUI; // ShortcutUI object that contains the shortcuts
+        private readonly SettingForm settingForm; // SettingForm object that contains the settings
 
+        /**
+         * BrowserForm constructor initializes the canvas, the tabPanel, and the settingForm.
+         */
         public BrowserForm()
         {
             InitializeComponent();
@@ -31,8 +38,15 @@ namespace NotSoBraveBrowser.src.Browser
             tabPanel = new TabPanel(canvas, settingForm);
         }
 
+        /**
+         * Browser_Load is a function that is called when the form is loaded.
+         * It takes an object and an EventArgs as parameters.
+         * The object is the sender of the event.
+         * The EventArgs is the event arguments.
+         */
         private void Browser_Load(object sender, EventArgs e)
         {
+            // Set the canvas properties
             canvas.Dock = DockStyle.Fill;
             canvas.BackColor = Color.White;
             canvas.FlowDirection = FlowDirection.TopDown;
@@ -40,18 +54,31 @@ namespace NotSoBraveBrowser.src.Browser
             canvas.AutoScroll = false;
             Controls.Add(canvas);
 
-            tabPanel.UpdatePanelWidth();
-            CreateMenu();
-            NewTab("New Tab", homeUI.homeManager.GetHome());
+            tabPanel.UpdatePanelWidth(); // Update the tab panel width
+            CreateMenu(); // Create the top menu
+            NewTab("New Tab", homeUI.homeManager.GetHome()); // Create a new tab with the home page
         }
 
+        /**
+         * Browser_Resize is a function that is called when the form is resized.
+         * It takes an object and an EventArgs as parameters.
+         * The object is the sender of the event.
+         * The EventArgs is the event arguments.
+         */
         private void Browser_Resize(object sender, EventArgs e)
         {
-            tabPanel.UpdatePanelWidth();
+            tabPanel.UpdatePanelWidth(); // Update the tab panel width
         }
 
+        /**
+         * Browser_KeyDown is a function that is called when a key is pressed.
+         * It takes an object and a KeyEventArgs as parameters.
+         * The object is the sender of the event.
+         * The KeyEventArgs is the event arguments.
+         */
         private void Browser_KeyDown(object sender, KeyEventArgs e)
         {
+            // Check if the key pressed is a shortcut and execute the shortcut
             if (e.Alt && e.KeyCode == Keys.F4) Close();
             else if (e.Control && e.Shift && e.KeyCode == Keys.N) new BrowserForm().Show();
             else if (e.Control && e.KeyCode == Keys.T) NewTab("New Tab");
@@ -69,44 +96,57 @@ namespace NotSoBraveBrowser.src.Browser
             else if (e.Control && e.KeyCode == Keys.OemQuestion) shortcutUI.OpenShortcut();
         }
 
+        /**
+         * NewTab is a function that creates a new tab.
+         * It takes a string and a string as parameters.
+         * The first string is the title of the tab.
+         * The second string is the url of the tab.
+         */
         public void NewTab(string tabTitle, string url = "")
         {
-            Tab newTab = tabPanel.AddTab(tabTitle);
-            if (url != "") newTab.RenderCode(url);
+            Tab newTab = tabPanel.AddTab(tabTitle); // Add a new tab to the tab panel
+            newTab.RenderCode(url); // Render the url
         }
 
+        /**
+         * CreateMenu is a function that creates the top menu.
+         */
         private void CreateMenu()
         {
             // Create a new MenuStrip
             MenuStrip menuStrip = new();
 
+            // Create File option
             ToolStripMenuItem fileMenu = new("File");
-            fileMenu.DropDownItems.Add("New Window");
-            fileMenu.DropDownItems.Add("New Tab");
-            fileMenu.DropDownItems.Add("Close Window");
-            fileMenu.DropDownItems[0].Click += (s, e) => new BrowserForm().Show();
-            fileMenu.DropDownItems[1].Click += (s, e) => NewTab("New Tab");
-            fileMenu.DropDownItems[2].Click += (s, e) => Close();
-            menuStrip.Items.Add(fileMenu);
+            fileMenu.DropDownItems.Add("New Window"); // Add New Window option
+            fileMenu.DropDownItems.Add("New Tab"); // Add New Tab option
+            fileMenu.DropDownItems.Add("Close Window"); // Add Close Window option
+            fileMenu.DropDownItems[0].Click += (s, e) => new BrowserForm().Show(); // Add event handler for New Window option
+            fileMenu.DropDownItems[1].Click += (s, e) => NewTab("New Tab"); // Add event handler for New Tab option
+            fileMenu.DropDownItems[2].Click += (s, e) => Close(); // Add event handler for Close Window option
+            menuStrip.Items.Add(fileMenu); // Add File option to the MenuStrip
 
+            // Create Edit option
             ToolStripMenuItem editMenu = new("Edit");
-            editMenu.DropDownItems.Add("Change Homepage");
-            editMenu.DropDownItems[0].Click += (s, e) => homeUI.OpenHome();
-            menuStrip.Items.Add(editMenu);
+            editMenu.DropDownItems.Add("Change Homepage"); // Add Change Homepage option
+            editMenu.DropDownItems[0].Click += (s, e) => homeUI.OpenHome(); // Add event handler for Change Homepage option
+            menuStrip.Items.Add(editMenu); // Add Edit option to the MenuStrip
 
+            // Create View option
             ToolStripMenuItem viewMenu = new("View");
-            viewMenu.DropDownItems.Add("History");
-            viewMenu.DropDownItems.Add("Downloads");
-            viewMenu.DropDownItems.Add("Bookmarks");
-            viewMenu.DropDownItems[0].Click += (s, e) => historyUI.OpenHistory();
-            viewMenu.DropDownItems[1].Click += (s, e) => downloadUI.OpenDownload();
-            viewMenu.DropDownItems[2].Click += (s, e) => bookmarkUI.OpenBookmark();
+            viewMenu.DropDownItems.Add("History"); // Add History option
+            viewMenu.DropDownItems.Add("Downloads"); // Add Downloads option
+            viewMenu.DropDownItems.Add("Bookmarks"); // Add Bookmarks option 
+            viewMenu.DropDownItems[0].Click += (s, e) => historyUI.OpenHistory(); // Add event handler for History option
+            viewMenu.DropDownItems[1].Click += (s, e) => downloadUI.OpenDownload(); // Add event handler for Downloads option 
+            viewMenu.DropDownItems[2].Click += (s, e) => bookmarkUI.OpenBookmark(); // Add event handler for Bookmarks option
             menuStrip.Items.Add(viewMenu);
 
+            // Create Settings option
             ToolStripMenuItem helpMenu = new("Help");
-            helpMenu.DropDownItems.Add("Show Keyboard Shortcuts");
-            helpMenu.DropDownItems[0].Click += (s, e) => shortcutUI.OpenShortcut();
-            menuStrip.Items.Add(helpMenu);
+            helpMenu.DropDownItems.Add("Show Keyboard Shortcuts"); // Add Show Keyboard Shortcuts option
+            helpMenu.DropDownItems[0].Click += (s, e) => shortcutUI.OpenShortcut(); // Add event handler to Show Keyboard Shortcuts
+            menuStrip.Items.Add(helpMenu); // Add Settings option to the MenuStrip
 
             // Add the MenuStrip to the form
             Controls.Add(menuStrip);
