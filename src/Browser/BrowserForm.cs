@@ -96,12 +96,16 @@ namespace NotSoBraveBrowser.src.Browser
             else if (e.Control && e.KeyCode == Keys.OemQuestion) shortcutUI.OpenShortcut();
         }
 
-        private async Task NewWindowAsync()
+        /**
+         * NewWindowAsync is a function that creates a new window.
+         * It takes no parameters.
+         */
+        private static async Task NewWindowAsync()
         {
             BrowserForm newBrowserForm = new();
             newBrowserForm.Show();
             newBrowserForm.Enabled = false;
-            await Task.Delay(1500);
+            await Task.Delay(1500); // Wait for 1.5 seconds to prevent the new window from being closed immediately
             newBrowserForm.Enabled = true;
         }
 
