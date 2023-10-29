@@ -76,11 +76,11 @@ namespace NotSoBraveBrowser.src.Browser
          * The object is the sender of the event.
          * The KeyEventArgs is the event arguments.
          */
-        private void Browser_KeyDown(object sender, KeyEventArgs e)
+        private async void Browser_KeyDown(object sender, KeyEventArgs e)
         {
             // Check if the key pressed is a shortcut and execute the shortcut
             if (e.Alt && e.KeyCode == Keys.F4) Close();
-            else if (e.Control && e.Shift && e.KeyCode == Keys.N) new BrowserForm().Show();
+            else if (e.Control && e.Shift && e.KeyCode == Keys.N) await NewWindowAsync();
             else if (e.Control && e.KeyCode == Keys.T) NewTab("New Tab");
             else if (e.Control && e.KeyCode == Keys.W && tabPanel.selectedTab != null) tabPanel.CloseTab(tabPanel.selectedTab);
             else if (e.Control && e.Shift && e.KeyCode == Keys.Tab) tabPanel.PrevTab();
@@ -94,6 +94,15 @@ namespace NotSoBraveBrowser.src.Browser
             else if (e.Control && e.KeyCode == Keys.B) bookmarkUI.OpenBookmark();
             else if (e.Control && e.KeyCode == Keys.P) homeUI.OpenHome();
             else if (e.Control && e.KeyCode == Keys.OemQuestion) shortcutUI.OpenShortcut();
+        }
+
+        private async Task NewWindowAsync()
+        {
+            BrowserForm newBrowserForm = new();
+            newBrowserForm.Show();
+            newBrowserForm.Enabled = false;
+            await Task.Delay(1500);
+            newBrowserForm.Enabled = true;
         }
 
         /**
@@ -121,7 +130,7 @@ namespace NotSoBraveBrowser.src.Browser
             fileMenu.DropDownItems.Add("New Window"); // Add New Window option
             fileMenu.DropDownItems.Add("New Tab"); // Add New Tab option
             fileMenu.DropDownItems.Add("Close Window"); // Add Close Window option
-            fileMenu.DropDownItems[0].Click += (s, e) => new BrowserForm().Show(); // Add event handler for New Window option
+            fileMenu.DropDownItems[0].Click += async (s, e) => await NewWindowAsync(); // Add event handler for New Window option
             fileMenu.DropDownItems[1].Click += (s, e) => NewTab("New Tab"); // Add event handler for New Tab option
             fileMenu.DropDownItems[2].Click += (s, e) => Close(); // Add event handler for Close Window option
             menuStrip.Items.Add(fileMenu); // Add File option to the MenuStrip
