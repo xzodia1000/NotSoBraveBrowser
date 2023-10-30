@@ -96,7 +96,7 @@ namespace NotSoBraveBrowser.src.Bookmark
          */
         private void BookmarkTable_Click(object? sender, EventArgs e)
         {
-            string url = bookmarkTable.SelectedItems[0].SubItems[2].Text; // Get the URL of the bookmark
+            string url = bookmarkTable.SelectedItems[0].SubItems[1].Text; // Get the URL of the bookmark
             browserForm.NewTab("New Tab", url);
         }
 
